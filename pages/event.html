@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Event Details - Campus Hub</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<header class="site-header">
+
+    <nav class="navbar">
+
+        <a
+            href="../index.html"
+            class="logo"
+        >
+            CAMPUS<span>HUB</span>
+        </a>
+
+
+        <div class="nav-links">
+
+            <a href="../index.html">
+                Events
+            </a>
+
+            <a href="../index.html#discover">
+                Discover
+            </a>
+
+            <a href="login.html">
+                My Account
+            </a>
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+
+<main>
+
+    <section class="events-section">
+
+        <div class="container">
+
+            <div id="eventDetails">
+                <!-- JavaScript inserts event -->
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+
+<footer class="site-footer">
+
+    <div class="container">
+
+        <div class="footer-content">
+
+            <strong>
+                CAMPUS<span>HUB</span>
+            </strong>
+
+            <p>
+                University Events & Workshops
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+
+<script
+    src="https://code.jquery.com/jquery-3.7.1.min.js"
+></script>
+
+<script src="../js/data.js"></script>
+<script src="../js/storage.js"></script>
+<script src="../js/app.js"></script>
+
+
+<script>
+
+$(document).ready(function () {
+
+    const parameters =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const eventId =
+        Number(
+            parameters.get("id")
+        );
+
+
+    const event =
+        events.find(function (item) {
+
+            return item.id === eventId;
+
+        });
+
+
+    const container =
+        $("#eventDetails");
+
+
+    if (!event) {
+
+        container.append(
+            $("<h1>")
+                .text("Event not found")
+        );
+
+        return;
+    }
+
+
+    const article =
+        $("<article>")
+            .addClass("event-card");
+
+
+    const date =
+        new Date(event.date);
+
+
+    const day =
+        String(
+            date.getDate()
+        ).padStart(2, "0");
+
+
+    const month =
+        date.toLocaleDateString(
+            "en-US",
+            {
+                month: "long"
+            }
+        );
+
+
+    const dateBox =
+        $("<div>")
+            .addClass("event-date");
+
+
+    dateBox.append(
+        $("<span>")
+            .addClass("event-day")
+            .text(day)
+    );
+
+
+    dateBox.append(
+        $("<span>")
+            .addClass("event-month")
+            .text(month)
+    );
+
+
+    const body =
+        $("<div>")
+            .addClass("event-body");
+
+
+    body.append(
+        $("<span>")
+            .addClass("event-category")
+            .text(event.category)
+    );
+
+
+    body.append(
+        $("<h1>")
+            .text(event.title)
+    );
+
+
+    body.append(
+        $("<p>")
+            .addClass("event-description")
+            .text(event.description)
+    );
+
+
+    body.append(
+        $("<p>")
+            .addClass("event-meta")
+            .text(
+                "Date: " +
+                event.date
+            )
+    );
+
+
+    body.append(
+        $("<p>")
+            .addClass("event-meta")
+            .text(
+                "Time: " +
+                event.time
+            )
+    );
+
+
+    body.append(
+        $("<p>")
+            .addClass("event-meta")
+            .text(
+                "Location: " +
+                event.location
+            )
+    );
+
+
+    body.append(
+        $("<p>")
+            .addClass("event-meta")
+            .text(
+                "Department: " +
+                event.department
+            )
+    );
+
+
+    body.append(
+        $("<a>")
+            .addClass("event-link")
+            .attr(
+                "href",
+                "../index.html"
+            )
+            .text("Back to Events")
+    );
+
+
+    article.append(
+        dateBox,
+        body
+    );
+
+
+    container.append(article);
+
+});
+
+</script>
+
+</body>
+
+</html>

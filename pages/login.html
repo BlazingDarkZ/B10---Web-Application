@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Select Role - Campus Hub</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<header class="site-header">
+
+    <nav class="navbar">
+
+        <a
+            href="../index.html"
+            class="logo"
+        >
+            CAMPUS<span>HUB</span>
+        </a>
+
+
+        <div class="nav-links">
+
+            <a href="../index.html">
+                Events
+            </a>
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+
+<main>
+
+    <section class="events-section">
+
+        <div class="container">
+
+            <article class="event-card">
+
+                <div class="event-body">
+
+                    <p class="eyebrow">
+                        DEMO LOGIN
+                    </p>
+
+                    <h1>
+                        Select your role
+                    </h1>
+
+                    <p class="event-description">
+                        This is a simple front-end
+                        role switch for the project.
+                    </p>
+
+
+                    <form id="roleForm">
+
+                        <div class="filter-group">
+
+                            <label for="role">
+                                Role
+                            </label>
+
+                            <select
+                                id="role"
+                                required
+                            >
+
+                                <option value="">
+                                    Select a role
+                                </option>
+
+                                <option value="guest">
+                                    Guest
+                                </option>
+
+                                <option value="student">
+                                    Student
+                                </option>
+
+                                <option value="organizer">
+                                    Organizer
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <br>
+
+
+                        <button
+                            type="submit"
+                            class="event-link"
+                        >
+                            Continue
+                        </button>
+
+                    </form>
+
+
+                    <p
+                        id="roleMessage"
+                        aria-live="polite"
+                    ></p>
+
+                </div>
+
+            </article>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+
+<footer class="site-footer">
+
+    <div class="container">
+
+        <div class="footer-content">
+
+            <strong>
+                CAMPUS<span>HUB</span>
+            </strong>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+
+<script
+    src="https://code.jquery.com/jquery-3.7.1.min.js"
+></script>
+
+<script src="../js/data.js"></script>
+<script src="../js/storage.js"></script>
+
+
+<script>
+
+$(document).ready(function () {
+
+    $("#roleForm").on(
+        "submit",
+        function (event) {
+
+            event.preventDefault();
+
+
+            const role =
+                $("#role").val();
+
+
+            if (!role) {
+
+                $("#roleMessage")
+                    .text(
+                        "Please select a role."
+                    );
+
+                return;
+            }
+
+
+            let user;
+
+
+            if (role === "guest") {
+
+                user = {
+                    id: 0,
+                    name: "Guest",
+                    role: "guest"
+                };
+
+            } else if (
+                role === "student"
+            ) {
+
+                user = {
+                    id: 101,
+                    name: "Demo Student",
+                    role: "student"
+                };
+
+            } else {
+
+                user = {
+                    id: 1,
+                    name: "Demo Organizer",
+                    role: "organizer"
+                };
+
+            }
+
+
+            saveCurrentUser(user);
+
+
+            $("#roleMessage")
+                .hide()
+                .text(
+                    "You are now using the " +
+                    user.role +
+                    " role."
+                )
+                .fadeIn(300);
+
+
+            setTimeout(
+                function () {
+
+                    window.location.href =
+                        "../index.html";
+
+                },
+                700
+            );
+
+        }
+    );
+
+});
+
+</script>
+
+</body>
+
+</html>

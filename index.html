@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Campus Event Hub</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<header class="site-header">
+
+    <nav class="navbar">
+
+        <a
+            href="index.html"
+            class="logo"
+        >
+            CAMPUS<span>HUB</span>
+        </a>
+
+
+        <div class="nav-links">
+
+            <a href="index.html">
+                Events
+            </a>
+
+            <a href="#discover">
+                Discover
+            </a>
+
+            <a href="pages/login.html">
+                My Account
+            </a>
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+
+<main>
+
+
+    <!-- Hero -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <p class="eyebrow">
+                UNIVERSITY EVENTS
+            </p>
+
+            <h1>
+                What's happening
+                <br>
+                on campus?
+            </h1>
+
+            <p class="hero-text">
+                Discover workshops, seminars,
+                lectures and activities happening
+                across the university.
+            </p>
+
+
+            <div class="hero-search">
+
+                <label for="search">
+                    Search events
+                </label>
+
+                <input
+                    type="search"
+                    id="search"
+                    placeholder="Search by event name..."
+                >
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- Upcoming Events -->
+
+    <section
+        class="events-section"
+        id="discover"
+    >
+
+        <div class="container">
+
+
+            <div class="section-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        DISCOVER
+                    </p>
+
+                    <h2>
+                        Upcoming Events
+                    </h2>
+
+                </div>
+
+                <span id="eventCount"></span>
+
+            </div>
+
+
+
+            <!-- Filters -->
+
+            <form
+                id="filterForm"
+                class="filter-bar"
+            >
+
+                <div class="filter-group">
+
+                    <label for="category">
+                        Category
+                    </label>
+
+                    <select id="category">
+
+                        <option value="">
+                            All
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="filter-group">
+
+                    <label for="department">
+                        Department
+                    </label>
+
+                    <select id="department">
+
+                        <option value="">
+                            All
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="filter-group">
+
+                    <label for="date">
+                        Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="date"
+                    >
+
+                </div>
+
+            </form>
+
+
+
+            <!-- Event Cards -->
+
+            <div
+                id="eventsContainer"
+                class="events-grid"
+            >
+
+                <!-- JavaScript inserts events here -->
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- Simple About Section -->
+
+    <section class="about-section">
+
+        <div class="container about-content">
+
+            <div>
+
+                <p class="eyebrow">
+                    CAMPUS LIFE
+                </p>
+
+                <h2>
+                    Find something
+                    worth attending.
+                </h2>
+
+            </div>
+
+            <p>
+                Campus Hub brings university events
+                and workshops together in one place,
+                making it easier for students to discover
+                what's happening around campus.
+            </p>
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+
+<footer class="site-footer">
+
+    <div class="container">
+
+        <div class="footer-content">
+
+            <strong>
+                CAMPUS<span>HUB</span>
+            </strong>
+
+            <p>
+                University Events & Workshops
+            </p>
+
+        </div>
+
+        <p class="copyright">
+            &copy; 2026 Campus Event Hub
+        </p>
+
+    </div>
+
+</footer>
+
+
+
+<script
+    src="https://code.jquery.com/jquery-3.7.1.min.js"
+></script>
+
+<script src="js/data.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/app.js"></script>
+
+
+</body>
+
+</html>
