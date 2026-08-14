@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<a href="users.html">
+    Manage Users
+</a>
+
+<a
+    id="adminUsersLink"
+    href="users.html"
+>
+    Manage Users
+</a>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Organizer Dashboard - CampusHub</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<header class="site-header">
+
+    <nav class="navbar">
+
+        <a
+            href="../index.html"
+            class="logo"
+        >
+            CAMPUS<span>HUB</span>
+        </a>
+
+
+        <div class="nav-links">
+
+    <a href="../index.html">
+        Events
+    </a>
+
+    <a href="my-registrations.html">
+        My Registrations
+    </a>
+
+    <a href="dashboard.html">
+        Dashboard
+    </a>
+
+    <a
+        id="adminUsersLink"
+        href="users.html"
+    >
+        Manage Users
+    </a>
+
+    <a href="login.html">
+        Login
+    </a>
+
+</div>
+
+    </nav>
+
+</header>
+
+
+<main>
+
+<section class="events-section">
+
+<div class="container">
+
+    <div class="section-header">
+
+        <div>
+
+            <p class="eyebrow">
+                ORGANIZER
+            </p>
+
+            <h1>
+                Dashboard
+            </h1>
+
+        </div>
+
+        <a
+            href="event-form.html"
+            class="event-link"
+        >
+            + Create Event
+        </a>
+
+    </div>
+
+
+    <div id="dashboardEvents">
+
+    </div>
+
+
+    <section id="registrationsSection">
+
+        <p class="eyebrow">
+            REGISTRATIONS
+        </p>
+
+        <h2>
+            Registered Students
+        </h2>
+
+
+        <div id="studentRegistrations">
+
+        </div>
+
+    </section>
+
+
+</div>
+
+</section>
+
+</main>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script src="../js/data.js"></script>
+<script src="../js/storage.js"></script>
+<script src="../js/app.js"></script>
+
+
+<script>
+
+$(document).ready(function () {
+
+    
+    const currentUser = getCurrentUser();
+
+    if (currentUser.role === "admin") {
+
+        $("#adminUsersLink").show();
+
+    } else {
+
+        $("#adminUsersLink").hide();
+
+    }
+
+});
+
+</script>
+
+
+</body>
+
+</html>

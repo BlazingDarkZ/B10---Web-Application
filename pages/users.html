@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Manage Users - CampusHub</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<header class="site-header">
+
+    <nav class="navbar">
+
+        <a
+            href="../index.html"
+            class="logo"
+        >
+            CAMPUS<span>HUB</span>
+        </a>
+
+
+        <div class="nav-links">
+
+            <a href="../index.html">
+                Events
+            </a>
+
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+
+            <a href="users.html">
+                Users
+            </a>
+
+            <a href="login.html">
+                Login
+            </a>
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+<main>
+
+<section class="events-section">
+
+<div class="container">
+
+
+<div class="section-header">
+
+    <div>
+
+        <p class="eyebrow">
+            ADMINISTRATION
+        </p>
+
+        <h1>
+            Manage Users
+        </h1>
+
+    </div>
+
+</div>
+
+
+<div
+    id="accessDenied"
+    class="form-card"
+>
+
+    <h2>
+        Access denied
+    </h2>
+
+    <p>
+        Only administrators can manage user roles.
+    </p>
+
+</div>
+
+
+<div
+    id="userManagement"
+    class="event-grid"
+>
+
+</div>
+
+
+</div>
+
+</section>
+
+</main>
+
+
+<footer class="site-footer">
+
+<div class="container">
+
+    <strong class="footer-logo">
+        CAMPUS<span>HUB</span>
+    </strong>
+
+</div>
+
+</footer>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script src="../js/data.js"></script>
+
+<script src="../js/storage.js"></script>
+
+
+<script>
+
+$(document).ready(function () {
+
+
+    const currentUser =
+        getCurrentUser();
+
+
+    /*
+        Only admins may access this page.
+    */
+
+    if (
+        currentUser.role !== "admin"
+    ) {
+
+        $("#userManagement").hide();
+
+        return;
+
+    }
+
+
+    $("#accessDenied").hide();
+
+
+    displayUsers();
+
+
+    function displayUsers() {
+
+        const users =
+            getUsers();
+
+
+        const container =
+            $("#userManagement");
+
+
+        container.empty();
+
+
+        users.forEach(
+            function (user) {
+
+
+                const card =
+                    $("<article>")
+                        .addClass("event-card");
+
+
+                $("<p>")
+                    .addClass("eyebrow")
+                    .text("USER")
+                    .appendTo(card);
+
+
+                $("<h2>")
+                    .text(user.username)
+                    .appendTo(card);
+
+
+                $("<p>")
+                    .text(
+                        "Current role: " +
+                        user.role
+                    )
+                    .appendTo(card);
+
+
+                /*
+                    Admin cannot change
+                    their own role.
+                */
+
+                if (
+                    user.username ===
+                    currentUser.username
+                ) {
+
+                    $("<p>")
+                        .text(
+                            "You cannot change your own role."
+                        )
+                        .appendTo(card);
+
+                } else {
+
+
+                    const form =
+                        $("<form>");
+
+
+                    const label =
+                        $("<label>")
+                            .attr(
+                                "for",
+                                "role-" +
+                                user.username
+                            )
+                            .text(
+                                "Set role"
+                            );
+
+
+                    const select =
+                        $("<select>")
+                            .attr(
+                                "id",
+                                "role-" +
+                                user.username
+                            );
+
+
+                    select.append(
+                        $("<option>")
+                            .val("student")
+                            .text("Student")
+                    );
+
+
+                    select.append(
+                        $("<option>")
+                            .val("admin")
+                            .text("Admin")
+                    );
+
+
+                    select.val(
+                        user.role
+                    );
+
+
+                    const button =
+                        $("<button>")
+                            .attr(
+                                "type",
+                                "submit"
+                            )
+                            .addClass(
+                                "primary-button"
+                            )
+                            .text(
+                                "Save Role"
+                            );
+
+
+                    form.append(label);
+
+                    form.append(select);
+
+                    form.append(button);
+
+
+                    form.on(
+                        "submit",
+                        function (event) {
+
+                            event.preventDefault();
+
+
+                            const newRole =
+                                select.val();
+
+
+                            changeUserRole(
+                                user.username,
+                                newRole
+                            );
+
+                        }
+                    );
+
+
+                    card.append(form);
+
+                }
+
+
+                container.append(card);
+
+            }
+        );
+
+    }
+
+
+    function changeUserRole(
+        username,
+        role
+    ) {
+
+        const users =
+            getUsers();
+
+
+        const user =
+            users.find(
+                function (account) {
+
+                    return (
+                        account.username ===
+                        username
+                    );
+
+                }
+            );
+
+
+        if (!user) {
+            return;
+        }
+
+
+        /*
+            Only these roles exist.
+        */
+
+        if (
+            role !== "student" &&
+            role !== "admin"
+        ) {
+
+            return;
+        }
+
+
+        user.role = role;
+
+
+        saveUsers(users);
+
+
+        displayUsers();
+
+    }
+
+});
+
+</script>
+
+
+</body>
+
+</html>

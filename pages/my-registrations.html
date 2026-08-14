@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>My Registrations - CampusHub</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<header class="site-header">
+
+    <nav class="navbar">
+
+        <div class="navbar">
+
+            <a
+                href="../index.html"
+                class="logo"
+            >
+                CAMPUS<span>HUB</span>
+            </a>
+
+        </div>
+
+
+        <div class="nav-links">
+
+            <a href="../index.html">
+                Events
+            </a>
+
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+
+            <a href="login.html">
+                Login
+            </a>
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+<main>
+
+<section class="events-section">
+
+<div class="container">
+
+    <div class="form-card">
+
+        <p class="eyebrow">
+            STUDENT
+        </p>
+
+        <h1>
+            My Registrations
+        </h1>
+
+    </div>
+
+
+    <div id="registrationList">
+
+    </div>
+
+</div>
+
+</section>
+
+</main>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script src="../js/data.js"></script>
+<script src="../js/storage.js"></script>
+
+
+<script>
+
+$(document).ready(function () {
+
+
+    displayRegistrations();
+
+});
+
+
+function displayRegistrations() {
+
+
+    const user =
+        getCurrentUser();
+
+
+    const container =
+        $("#registrationList");
+
+
+    container.empty();
+
+
+    if (
+        user.role !== "student"
+    ) {
+
+        container.append(
+
+            $("<div>")
+                .addClass(
+                    "form-card"
+                )
+                .append(
+
+                    $("<p>")
+                        .text(
+                            "Please login as a student to view registrations."
+                        )
+
+                )
+                .append(
+
+                    $("<a>")
+                        .addClass(
+                            "event-link"
+                        )
+                        .attr(
+                            "href",
+                            "login.html"
+                        )
+                        .text(
+                            "Login"
+                        )
+
+                )
+
+        );
+
+        return;
+    }
+
+
+    const events =
+        getEvents();
+
+
+    const registrations =
+        getRegistrations();
+
+
+    const mine =
+        registrations.filter(
+            function (registration) {
+
+                return (
+                    registration.studentId ===
+                    user.id
+                );
+
+            }
+        );
+
+
+    if (mine.length === 0) {
+
+        container.append(
+
+            $("<div>")
+                .addClass(
+                    "form-card"
+                )
+                .append(
+
+                    $("<p>")
+                        .text(
+                            "You are not registered for any events."
+                        )
+
+                )
+
+        );
+
+        return;
+    }
+
+
+    mine.forEach(
+        function (registration) {
+
+
+            const event =
+                events.find(
+                    function (item) {
+
+                        return (
+                            item.id ===
+                            registration.eventId
+                        );
+
+                    }
+                );
+
+
+            if (!event) {
+                return;
+            }
+
+
+            const article =
+                $("<article>")
+                    .addClass(
+                        "registration-item"
+                    );
+
+
+            article.append(
+
+                $("<p>")
+                    .addClass(
+                        "eyebrow"
+                    )
+                    .text(
+                        event.category
+                    )
+
+            );
+
+
+            article.append(
+
+                $("<h2>")
+                    .text(
+                        event.title
+                    )
+
+            );
+
+
+            article.append(
+
+                $("<p>")
+                    .text(
+                        event.date +
+                        " · " +
+                        event.time
+                    )
+
+            );
+
+
+            article.append(
+
+                $("<p>")
+                    .text(
+                        "Registered as: " +
+                        registration.studentName
+                    )
+
+            );
+
+
+            article.append(
+
+                $("<p>")
+                    .text(
+                        "Email: " +
+                        registration.email
+                    )
+
+            );
+
+
+            const actions =
+                $("<div>")
+                    .addClass(
+                        "registration-actions"
+                    );
+
+
+            const editButton =
+                $("<button>")
+                    .addClass(
+                        "secondary-button"
+                    )
+                    .text(
+                        "Edit Details"
+                    );
+
+
+            const cancelButton =
+                $("<button>")
+                    .addClass(
+                        "danger-button"
+                    )
+                    .text(
+                        "Cancel"
+                    );
+
+
+            editButton.on(
+                "click",
+                function () {
+
+                    showEditForm(
+                        registration
+                    );
+
+                }
+            );
+
+
+            cancelButton.on(
+                "click",
+                function () {
+
+                    if (
+                        !confirm(
+                            "Cancel this registration?"
+                        )
+                    ) {
+                        return;
+                    }
+
+
+                    let registrations =
+                        getRegistrations();
+
+
+                    registrations =
+                        registrations.filter(
+                            function (item) {
+
+                                return !(
+                                    item.id ===
+                                    registration.id
+                                );
+
+                            }
+                        );
+
+
+                    saveRegistrations(
+                        registrations
+                    );
+
+
+                    displayRegistrations();
+
+                }
+            );
+
+
+            actions.append(
+                editButton,
+                cancelButton
+            );
+
+
+            article.append(actions);
+
+
+            container.append(article);
+
+        }
+    );
+
+}
+
+
+function showEditForm(
+    registration
+) {
+
+
+    const container =
+        $("#registrationList");
+
+
+    container.empty();
+
+
+    const form =
+        $("<form>")
+            .addClass(
+                "form-card"
+            );
+
+
+    form.append(
+
+        $("<p>")
+            .addClass(
+                "eyebrow"
+            )
+            .text(
+                "EDIT REGISTRATION"
+            )
+
+    );
+
+
+    form.append(
+
+        $("<h2>")
+            .text(
+                "Update your details"
+            )
+
+    );
+
+
+    const name =
+        $("<input>")
+            .attr({
+                type: "text",
+                id: "editName",
+                maxlength: 80,
+                required: true
+            })
+            .val(
+                registration.studentName
+            );
+
+
+    const nameGroup =
+        $("<div>")
+            .addClass(
+                "form-group"
+            );
+
+
+    nameGroup.append(
+
+        $("<label>")
+            .attr(
+                "for",
+                "editName"
+            )
+            .text(
+                "Full name"
+            )
+
+    );
+
+
+    nameGroup.append(name);
+
+
+    const email =
+        $("<input>")
+            .attr({
+                type: "email",
+                id: "editEmail",
+                maxlength: 120,
+                required: true
+            })
+            .val(
+                registration.email
+            );
+
+
+    const emailGroup =
+        $("<div>")
+            .addClass(
+                "form-group"
+            );
+
+
+    emailGroup.append(
+
+        $("<label>")
+            .attr(
+                "for",
+                "editEmail"
+            )
+            .text(
+                "Email"
+            )
+
+    );
+
+
+    emailGroup.append(email);
+
+
+    const notes =
+        $("<textarea>")
+            .attr({
+                id: "editNotes",
+                maxlength: 300
+            })
+            .val(
+                registration.notes
+            );
+
+
+    const notesGroup =
+        $("<div>")
+            .addClass(
+                "form-group"
+            );
+
+
+    notesGroup.append(
+
+        $("<label>")
+            .attr(
+                "for",
+                "editNotes"
+            )
+            .text(
+                "Notes"
+            )
+
+    );
+
+
+    notesGroup.append(notes);
+
+
+    const error =
+        $("<p>")
+            .addClass(
+                "form-error"
+            );
+
+
+    const save =
+        $("<button>")
+            .attr(
+                "type",
+                "submit"
+            )
+            .addClass(
+                "primary-button"
+            )
+            .text(
+                "Save Changes"
+            );
+
+
+    const cancel =
+        $("<button>")
+            .attr(
+                "type",
+                "button"
+            )
+            .addClass(
+                "secondary-button"
+            )
+            .text(
+                "Back"
+            );
+
+
+    cancel.on(
+        "click",
+        function () {
+
+            displayRegistrations();
+
+        }
+    );
+
+
+    const actions =
+        $("<div>")
+            .addClass(
+                "form-actions"
+            );
+
+
+    actions.append(
+        save,
+        cancel
+    );
+
+
+    form.append(
+        nameGroup,
+        emailGroup,
+        notesGroup,
+        error,
+        actions
+    );
+
+
+    form.on(
+        "submit",
+        function (event) {
+
+            event.preventDefault();
+
+
+            const newName =
+                $("#editName")
+                    .val()
+                    .trim();
+
+
+            const newEmail =
+                $("#editEmail")
+                    .val()
+                    .trim();
+
+
+            const newNotes =
+                $("#editNotes")
+                    .val()
+                    .trim();
+
+
+            if (
+                newName.length < 2
+            ) {
+
+                error.text(
+                    "Name must contain at least 2 characters."
+                );
+
+                return;
+            }
+
+
+            const emailPattern =
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+            if (
+                !emailPattern.test(
+                    newEmail
+                )
+            ) {
+
+                error.text(
+                    "Please enter a valid email."
+                );
+
+                return;
+            }
+
+
+            let registrations =
+                getRegistrations();
+
+
+            const index =
+                registrations.findIndex(
+                    function (item) {
+
+                        return (
+                            item.id ===
+                            registration.id
+                        );
+
+                    }
+                );
+
+
+            if (index === -1) {
+                return;
+            }
+
+
+            registrations[index].studentName =
+                newName;
+
+
+            registrations[index].email =
+                newEmail;
+
+
+            registrations[index].notes =
+                newNotes;
+
+
+            saveRegistrations(
+                registrations
+            );
+
+
+            displayRegistrations();
+
+        }
+    );
+
+
+    container.append(form);
+
+}
+
+</script>
+
+
+</body>
+
+</html>

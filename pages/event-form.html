@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>CampusHub - Event Form</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<header class="site-header">
+
+    <nav class="navbar">
+
+        <a
+            href="../index.html"
+            class="logo"
+        >
+            CAMPUS<span>HUB</span>
+        </a>
+
+
+        <div class="nav-links">
+
+            <a href="../index.html">
+                Events
+            </a>
+
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+
+            <a href="my-registrations.html">
+                My Registrations
+            </a>
+
+            <a href="login.html">
+                Login
+            </a>
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+<main>
+
+<section class="events-section">
+
+<div class="container">
+
+
+<div class="form-card">
+
+    <p class="eyebrow">
+        CAMPUS EVENT
+    </p>
+
+    <h1 id="formTitle">
+        Create Event
+    </h1>
+
+    <p>
+        Create or update a campus event.
+    </p>
+
+
+    <form
+        id="eventForm"
+        novalidate
+    >
+
+
+        <!-- TITLE -->
+
+        <div class="form-group">
+
+            <label for="title">
+                Event Title
+            </label>
+
+            <input
+                type="text"
+                id="title"
+                maxlength="100"
+                required
+            >
+
+            <p
+                id="titleError"
+                class="form-error"
+            ></p>
+
+        </div>
+
+
+        <!-- DESCRIPTION -->
+
+        <div class="form-group">
+
+            <label for="description">
+                Description
+            </label>
+
+            <textarea
+                id="description"
+                rows="5"
+                maxlength="500"
+                required
+            ></textarea>
+
+            <p
+                id="descriptionError"
+                class="form-error"
+            ></p>
+
+        </div>
+
+
+        <!-- DATE -->
+
+        <div class="form-group">
+
+            <label for="date">
+                Date
+            </label>
+
+            <input
+                type="date"
+                id="date"
+                required
+            >
+
+            <p
+                id="dateError"
+                class="form-error"
+            ></p>
+
+        </div>
+
+
+        <!-- TIME -->
+
+        <div class="form-group">
+
+            <label for="time">
+                Time
+            </label>
+
+            <input
+                type="time"
+                id="time"
+                required
+            >
+
+            <p
+                id="timeError"
+                class="form-error"
+            ></p>
+
+        </div>
+
+
+        <!-- LOCATION -->
+
+        <div class="form-group">
+
+            <label for="location">
+                Location
+            </label>
+
+            <input
+                type="text"
+                id="location"
+                maxlength="100"
+                required
+            >
+
+            <p
+                id="locationError"
+                class="form-error"
+            ></p>
+
+        </div>
+
+
+        <!-- CATEGORY -->
+
+        <div class="form-group">
+
+            <label for="category">
+                Category
+            </label>
+
+            <select
+                id="category"
+                required
+            >
+
+                <option value="">
+                    Select a category
+                </option>
+
+                <option value="Workshop">
+                    Workshop
+                </option>
+
+                <option value="Career">
+                    Career
+                </option>
+
+                <option value="Social">
+                    Social
+                </option>
+
+                <option value="Academic">
+                    Academic
+                </option>
+
+            </select>
+
+            <p
+                id="categoryError"
+                class="form-error"
+            ></p>
+
+        </div>
+
+
+        <!-- DEPARTMENT -->
+
+        <div class="form-group">
+
+            <label for="department">
+                Department
+            </label>
+
+            <select
+                id="department"
+                required
+            >
+
+                <option value="">
+                    Select a department
+                </option>
+
+                <option value="Computer Science">
+                    Computer Science
+                </option>
+
+                <option value="Humanities">
+                    Humanities
+                </option>
+
+                <option value="Business">
+                    Business
+                </option>
+
+                <option value="University">
+                    University
+                </option>
+
+            </select>
+
+            <p
+                id="departmentError"
+                class="form-error"
+            ></p>
+
+        </div>
+
+
+        <p
+            id="formError"
+            class="form-error"
+        ></p>
+
+
+        <div class="form-actions">
+
+            <button
+                type="submit"
+                class="primary-button"
+            >
+                Save Event
+            </button>
+
+            <a
+                href="../index.html"
+                class="secondary-button"
+            >
+                Cancel
+            </a>
+
+        </div>
+
+
+    </form>
+
+</div>
+
+
+</div>
+
+</section>
+
+</main>
+
+
+<footer class="site-footer">
+
+<div class="container">
+
+    <strong class="footer-logo">
+        CAMPUS<span>HUB</span>
+    </strong>
+
+    <p>
+        University events and workshops.
+    </p>
+
+</div>
+
+</footer>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script src="../js/data.js"></script>
+
+<script src="../js/storage.js"></script>
+
+<script src="../js/events.js"></script>
+
+
+<script>
+
+$(document).ready(function () {
+
+
+    const currentUser =
+        getCurrentUser();
+
+
+    /*
+        Only students and admins
+        can create/edit events.
+    */
+
+    if (
+        currentUser.role !== "student" &&
+        currentUser.role !== "admin"
+    ) {
+
+        $("#formError").text(
+            "You must be logged in as a student or admin to manage events."
+        );
+
+        $("#eventForm").hide();
+
+        return;
+    }
+
+
+    /*
+        Check whether we are editing
+        an existing event.
+    */
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const eventId =
+        params.get("id");
+
+
+    let editingEvent = null;
+
+
+    if (eventId) {
+
+        const events =
+            getEvents();
+
+
+        editingEvent =
+            events.find(
+                function (event) {
+
+                    return String(event.id) ===
+                        String(eventId);
+
+                }
+            );
+
+
+        /*
+            Event does not exist.
+        */
+
+        if (!editingEvent) {
+
+            $("#formError").text(
+                "The requested event could not be found."
+            );
+
+            $("#eventForm").hide();
+
+            return;
+        }
+
+
+        /*
+            Check ownership/permission.
+        */
+
+        if (
+            !canManageEvent(
+                editingEvent,
+                currentUser
+            )
+        ) {
+
+            $("#formError").text(
+                "You do not have permission to edit this event."
+            );
+
+            $("#eventForm").hide();
+
+            return;
+        }
+
+
+        /*
+            Change page title.
+        */
+
+        $("#formTitle").text(
+            "Edit Event"
+        );
+
+
+        /*
+            Fill form with existing data.
+        */
+
+        $("#title").val(
+            editingEvent.title
+        );
+
+        $("#description").val(
+            editingEvent.description
+        );
+
+        $("#date").val(
+            editingEvent.date
+        );
+
+        $("#time").val(
+            editingEvent.time
+        );
+
+        $("#location").val(
+            editingEvent.location
+        );
+
+        $("#category").val(
+            editingEvent.category
+        );
+
+        $("#department").val(
+            editingEvent.department
+        );
+
+    }
+
+
+    /*
+        Form submission
+    */
+
+    $("#eventForm").on(
+        "submit",
+        function (event) {
+
+            event.preventDefault();
+
+
+            /*
+                Clear previous errors.
+            */
+
+            $(".form-error").text("");
+
+
+            const title =
+                $("#title").val().trim();
+
+
+            const description =
+                $("#description")
+                    .val()
+                    .trim();
+
+
+            const date =
+                $("#date").val();
+
+
+            const time =
+                $("#time").val();
+
+
+            const location =
+                $("#location")
+                    .val()
+                    .trim();
+
+
+            const category =
+                $("#category").val();
+
+
+            const department =
+                $("#department").val();
+
+
+            let valid = true;
+
+
+            /*
+                TITLE
+            */
+
+            if (
+                title.length < 3 ||
+                title.length > 100
+            ) {
+
+                $("#titleError").text(
+                    "Title must contain 3-100 characters."
+                );
+
+                valid = false;
+
+            }
+
+
+            /*
+                DESCRIPTION
+            */
+
+            if (
+                description.length < 10 ||
+                description.length > 500
+            ) {
+
+                $("#descriptionError").text(
+                    "Description must contain 10-500 characters."
+                );
+
+                valid = false;
+
+            }
+
+
+            /*
+                DATE
+            */
+
+            if (!date) {
+
+                $("#dateError").text(
+                    "Please select a date."
+                );
+
+                valid = false;
+
+            }
+
+
+            /*
+                TIME
+            */
+
+            if (!time) {
+
+                $("#timeError").text(
+                    "Please select a time."
+                );
+
+                valid = false;
+
+            }
+
+
+            /*
+                LOCATION
+            */
+
+            if (
+                location.length < 2 ||
+                location.length > 100
+            ) {
+
+                $("#locationError").text(
+                    "Location must contain 2-100 characters."
+                );
+
+                valid = false;
+
+            }
+
+
+            /*
+                CATEGORY
+            */
+
+            if (!category) {
+
+                $("#categoryError").text(
+                    "Please select a category."
+                );
+
+                valid = false;
+
+            }
+
+
+            /*
+                DEPARTMENT
+            */
+
+            if (!department) {
+
+                $("#departmentError").text(
+                    "Please select a department."
+                );
+
+                valid = false;
+
+            }
+
+
+            if (!valid) {
+                return;
+            }
+
+
+            /*
+                Create or update.
+            */
+
+            const eventData = {
+
+                title: title,
+
+                description: description,
+
+                date: date,
+
+                time: time,
+
+                location: location,
+
+                category: category,
+
+                department: department
+
+            };
+
+
+            if (editingEvent) {
+
+
+                const success =
+                    updateEvent(
+                        editingEvent.id,
+                        eventData
+                    );
+
+
+                if (!success) {
+
+                    $("#formError").text(
+                        "Unable to update this event."
+                    );
+
+                    return;
+
+                }
+
+
+            } else {
+
+
+                const newEvent =
+                    createEvent(
+                        eventData
+                    );
+
+
+                if (!newEvent) {
+
+                    $("#formError").text(
+                        "Unable to create this event."
+                    );
+
+                    return;
+
+                }
+
+            }
+
+
+            /*
+                Return to homepage.
+            */
+
+            window.location.href =
+                "../index.html";
+
+        }
+    );
+
+});
+
+</script>
+
+
+</body>
+
+</html>

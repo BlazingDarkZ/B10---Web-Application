@@ -1,15 +1,13 @@
 function getEvents() {
 
-    const savedEvents = localStorage.getItem("events");
+    const saved =
+        localStorage.getItem("campusEvents");
 
-    if (savedEvents) {
-        return JSON.parse(savedEvents);
+    if (saved) {
+        return JSON.parse(saved);
     }
 
-    localStorage.setItem(
-        "events",
-        JSON.stringify(initialEvents)
-    );
+    saveEvents(initialEvents);
 
     return initialEvents;
 }
@@ -18,33 +16,94 @@ function getEvents() {
 function saveEvents(events) {
 
     localStorage.setItem(
-        "events",
+        "campusEvents",
         JSON.stringify(events)
     );
+
+}
+
+
+function getRegistrations() {
+
+    const saved =
+        localStorage.getItem("campusRegistrations");
+
+    if (saved) {
+        return JSON.parse(saved);
+    }
+
+    saveRegistrations(initialRegistrations);
+
+    return initialRegistrations;
+}
+
+
+function saveRegistrations(registrations) {
+
+    localStorage.setItem(
+        "campusRegistrations",
+        JSON.stringify(registrations)
+    );
+
+}
+
+
+function getUsers() {
+
+    const saved =
+        localStorage.getItem("campusUsers");
+
+    if (saved) {
+        return JSON.parse(saved);
+    }
+
+    saveUsers(initialUsers);
+
+    return initialUsers;
+}
+
+
+function saveUsers(users) {
+
+    localStorage.setItem(
+        "campusUsers",
+        JSON.stringify(users)
+    );
+
 }
 
 
 function getCurrentUser() {
 
-    const savedUser =
-        localStorage.getItem("currentUser");
+    const saved =
+        localStorage.getItem("campusCurrentUser");
 
-    if (savedUser) {
-        return JSON.parse(savedUser);
+    if (saved) {
+        return JSON.parse(saved);
     }
 
     return {
-        id: 0,
-        name: "Guest",
+        username: "guest",
         role: "guest"
     };
+
 }
 
 
 function saveCurrentUser(user) {
 
     localStorage.setItem(
-        "currentUser",
+        "campusCurrentUser",
         JSON.stringify(user)
     );
+
+}
+
+
+function logoutUser() {
+
+    localStorage.removeItem(
+        "campusCurrentUser"
+    );
+
 }

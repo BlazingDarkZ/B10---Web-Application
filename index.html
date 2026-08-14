@@ -10,7 +10,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Campus Event Hub</title>
+    <title>CampusHub - University Events</title>
 
     <link
         rel="stylesheet"
@@ -41,12 +41,16 @@
                 Events
             </a>
 
-            <a href="#discover">
-                Discover
+            <a href="pages/my-registrations.html">
+                My Registrations
+            </a>
+
+            <a href="pages/dashboard.html">
+                Dashboard
             </a>
 
             <a href="pages/login.html">
-                My Account
+                Login
             </a>
 
         </div>
@@ -56,192 +60,154 @@
 </header>
 
 
-
 <main>
 
 
-    <!-- Hero -->
+<section class="hero">
 
-    <section class="hero">
+    <div class="container">
 
-        <div class="hero-content">
+        <p class="eyebrow">
+            UNIVERSITY EVENTS
+        </p>
 
-            <p class="eyebrow">
-                UNIVERSITY EVENTS
-            </p>
+        <h1>
+            Discover what's happening
+            on campus.
+        </h1>
 
-            <h1>
-                What's happening
-                <br>
-                on campus?
-            </h1>
+        <p class="hero-text">
+            Find workshops, lectures, seminars
+            and student events at your university.
+        </p>
 
-            <p class="hero-text">
-                Discover workshops, seminars,
-                lectures and activities happening
-                across the university.
-            </p>
+    </div>
+
+</section>
 
 
-            <div class="hero-search">
+<section class="events-section">
+
+    <div class="container">
+
+
+        <div class="section-header">
+
+            <div>
+
+                <p class="eyebrow">
+                    EXPLORE
+                </p>
+
+                <h2>
+                    Upcoming Events
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <form id="filterForm" class="filter-form">
+
+
+            <div class="form-group">
 
                 <label for="search">
-                    Search events
+                    Search
                 </label>
 
                 <input
                     type="search"
                     id="search"
-                    placeholder="Search by event name..."
+                    placeholder="Search events..."
                 >
 
             </div>
 
-        </div>
 
-    </section>
+            <div class="form-group">
 
+                <label for="category">
+                    Category
+                </label>
 
+                <select id="category">
 
-    <!-- Upcoming Events -->
+                    <option value="">
+                        All categories
+                    </option>
 
-    <section
-        class="events-section"
-        id="discover"
-    >
-
-        <div class="container">
-
-
-            <div class="section-header">
-
-                <div>
-
-                    <p class="eyebrow">
-                        DISCOVER
-                    </p>
-
-                    <h2>
-                        Upcoming Events
-                    </h2>
-
-                </div>
-
-                <span id="eventCount"></span>
+                </select>
 
             </div>
 
 
+            <div class="form-group">
 
-            <!-- Filters -->
+                <label for="department">
+                    Department
+                </label>
 
-            <form
-                id="filterForm"
-                class="filter-bar"
+                <select id="department">
+
+                    <option value="">
+                        All departments
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="date">
+                    Date
+                </label>
+
+                <input
+                    type="date"
+                    id="date"
+                >
+
+            </div>
+
+
+            <button
+                type="button"
+                id="clearFilters"
+                class="secondary-button"
             >
-
-                <div class="filter-group">
-
-                    <label for="category">
-                        Category
-                    </label>
-
-                    <select id="category">
-
-                        <option value="">
-                            All
-                        </option>
-
-                    </select>
-
-                </div>
+                Clear
+            </button>
 
 
-                <div class="filter-group">
-
-                    <label for="department">
-                        Department
-                    </label>
-
-                    <select id="department">
-
-                        <option value="">
-                            All
-                        </option>
-
-                    </select>
-
-                </div>
+        </form>
 
 
-                <div class="filter-group">
-
-                    <label for="date">
-                        Date
-                    </label>
-
-                    <input
-                        type="date"
-                        id="date"
-                    >
-
-                </div>
-
-            </form>
-
-
-
-            <!-- Event Cards -->
-
-            <div
-                id="eventsContainer"
-                class="events-grid"
-            >
-
-                <!-- JavaScript inserts events here -->
-
-            </div>
-
+        <div
+            id="eventList"
+            class="event-grid"
+        >
 
         </div>
 
-    </section>
+
+        <p
+            id="noEvents"
+            class="no-events"
+        >
+            No events found.
+        </p>
 
 
+    </div>
 
-    <!-- Simple About Section -->
-
-    <section class="about-section">
-
-        <div class="container about-content">
-
-            <div>
-
-                <p class="eyebrow">
-                    CAMPUS LIFE
-                </p>
-
-                <h2>
-                    Find something
-                    worth attending.
-                </h2>
-
-            </div>
-
-            <p>
-                Campus Hub brings university events
-                and workshops together in one place,
-                making it easier for students to discover
-                what's happening around campus.
-            </p>
-
-        </div>
-
-    </section>
+</section>
 
 
 </main>
-
 
 
 <footer class="site-footer">
@@ -250,18 +216,23 @@
 
         <div class="footer-content">
 
-            <strong>
-                CAMPUS<span>HUB</span>
-            </strong>
+            <div>
 
-            <p>
-                University Events & Workshops
-            </p>
+                <strong class="footer-logo">
+                    CAMPUS<span>HUB</span>
+                </strong>
+
+                <p>
+                    University events and workshops.
+                </p>
+
+            </div>
 
         </div>
 
+
         <p class="copyright">
-            &copy; 2026 Campus Event Hub
+            CampusHub student project.
         </p>
 
     </div>
@@ -269,14 +240,332 @@
 </footer>
 
 
-
-<script
-    src="https://code.jquery.com/jquery-3.7.1.min.js"
-></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <script src="js/data.js"></script>
 <script src="js/storage.js"></script>
 <script src="js/app.js"></script>
+
+
+<script>
+
+$(document).ready(function () {
+
+
+    let events = getEvents();
+
+
+    const categorySelect =
+        $("#category");
+
+
+    const departmentSelect =
+        $("#department");
+
+
+    /*
+       Create category options
+    */
+
+    const categories =
+        [
+            ...new Set(
+                events.map(
+                    function (event) {
+                        return event.category;
+                    }
+                )
+            )
+        ];
+
+
+    categories.forEach(
+        function (category) {
+
+            categorySelect.append(
+
+                $("<option>")
+                    .val(category)
+                    .text(category)
+
+            );
+
+        }
+    );
+
+
+    /*
+       Create department options
+    */
+
+    const departments =
+        [
+            ...new Set(
+                events.map(
+                    function (event) {
+                        return event.department;
+                    }
+                )
+            )
+        ];
+
+
+    departments.forEach(
+        function (department) {
+
+            departmentSelect.append(
+
+                $("<option>")
+                    .val(department)
+                    .text(department)
+
+            );
+
+        }
+    );
+
+
+    /*
+       Display events
+    */
+
+    function displayEvents() {
+
+
+        const search =
+            $("#search")
+                .val()
+                .toLowerCase()
+                .trim();
+
+
+        const category =
+            $("#category").val();
+
+
+        const department =
+            $("#department").val();
+
+
+        const date =
+            $("#date").val();
+
+
+        const filteredEvents =
+            events.filter(
+                function (event) {
+
+
+                    const matchesSearch =
+                        event.title
+                            .toLowerCase()
+                            .includes(search) ||
+
+                        event.description
+                            .toLowerCase()
+                            .includes(search);
+
+
+                    const matchesCategory =
+                        !category ||
+                        event.category === category;
+
+
+                    const matchesDepartment =
+                        !department ||
+                        event.department === department;
+
+
+                    const matchesDate =
+                        !date ||
+                        event.date === date;
+
+
+                    return (
+                        matchesSearch &&
+                        matchesCategory &&
+                        matchesDepartment &&
+                        matchesDate
+                    );
+
+                }
+            );
+
+
+        const list =
+            $("#eventList");
+
+
+        list.empty();
+
+
+        $("#noEvents").hide();
+
+
+        if (
+            filteredEvents.length === 0
+        ) {
+
+            $("#noEvents").show();
+
+            return;
+
+        }
+
+
+        filteredEvents.forEach(
+            function (event) {
+
+
+                const card =
+                    $("<article>")
+                        .addClass("event-card");
+
+
+                card.append(
+
+                    $("<p>")
+                        .addClass("eyebrow")
+                        .text(event.category)
+
+                );
+
+
+                card.append(
+
+                    $("<h3>")
+                        .text(event.title)
+
+                );
+
+
+                card.append(
+
+                    $("<p>")
+                        .addClass("event-description")
+                        .text(event.description)
+
+                );
+
+
+                card.append(
+
+                    $("<p>")
+                        .addClass("event-meta")
+                        .text(
+                            event.date +
+                            " · " +
+                            event.time
+                        )
+
+                );
+
+
+                card.append(
+
+                    $("<p>")
+                        .addClass("event-meta")
+                        .text(
+                            event.location
+                        )
+
+                );
+
+
+                card.append(
+
+                    $("<p>")
+                        .addClass("event-meta")
+                        .text(
+                            event.department
+                        )
+
+                );
+
+
+                card.append(
+
+                    $("<a>")
+                        .addClass("event-link")
+                        .attr(
+                            "href",
+                            "pages/event.html?id=" +
+                            event.id
+                        )
+                        .text(
+                            "View Event →"
+                        )
+
+                );
+
+
+                list.append(card);
+
+            }
+        );
+
+    }
+
+
+    /*
+       Filters update immediately
+    */
+
+    $("#search").on(
+        "input",
+        displayEvents
+    );
+
+
+    $("#category").on(
+        "change",
+        displayEvents
+    );
+
+
+    $("#department").on(
+        "change",
+        displayEvents
+    );
+
+
+    $("#date").on(
+        "change",
+        displayEvents
+    );
+
+
+    /*
+       Clear filters
+    */
+
+    $("#clearFilters").on(
+        "click",
+        function () {
+
+            $("#search").val("");
+
+            $("#category").val("");
+
+            $("#department").val("");
+
+            $("#date").val("");
+
+            displayEvents();
+
+        }
+    );
+
+
+    /*
+       Initial display
+    */
+
+    displayEvents();
+
+});
+
+</script>
 
 
 </body>

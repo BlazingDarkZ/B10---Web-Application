@@ -10,7 +10,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Select Role - Campus Hub</title>
+    <title>Login - CampusHub</title>
 
     <link
         rel="stylesheet"
@@ -41,6 +41,14 @@
                 Events
             </a>
 
+            <a href="my-registrations.html">
+                My Registrations
+            </a>
+
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+
         </div>
 
     </nav>
@@ -48,118 +56,240 @@
 </header>
 
 
-
 <main>
 
-    <section class="events-section">
+<section class="events-section">
 
-        <div class="container">
-
-            <article class="event-card">
-
-                <div class="event-body">
-
-                    <p class="eyebrow">
-                        DEMO LOGIN
-                    </p>
-
-                    <h1>
-                        Select your role
-                    </h1>
-
-                    <p class="event-description">
-                        This is a simple front-end
-                        role switch for the project.
-                    </p>
+<div class="container">
 
 
-                    <form id="roleForm">
+<div class="form-card">
 
-                        <div class="filter-group">
+    <p class="eyebrow">
+        ACCOUNT
+    </p>
 
-                            <label for="role">
-                                Role
-                            </label>
+    <h1>
+        Login
+    </h1>
 
-                            <select
-                                id="role"
-                                required
-                            >
-
-                                <option value="">
-                                    Select a role
-                                </option>
-
-                                <option value="guest">
-                                    Guest
-                                </option>
-
-                                <option value="student">
-                                    Student
-                                </option>
-
-                                <option value="organizer">
-                                    Organizer
-                                </option>
-
-                            </select>
-
-                        </div>
+    <p>
+        Students can log in using their CampusHub
+        username and password.
+    </p>
 
 
-                        <br>
+    <form id="loginForm" novalidate>
 
 
-                        <button
-                            type="submit"
-                            class="event-link"
-                        >
-                            Continue
-                        </button>
+        <div class="form-group">
 
-                    </form>
+            <label for="username">
+                Username
+            </label>
 
+            <input
+                type="text"
+                id="username"
+                name="username"
+                maxlength="30"
+                autocomplete="username"
+                required
+            >
 
-                    <p
-                        id="roleMessage"
-                        aria-live="polite"
-                    ></p>
-
-                </div>
-
-            </article>
+            <p
+                id="usernameError"
+                class="form-error"
+            ></p>
 
         </div>
 
-    </section>
+
+        <div class="form-group">
+
+            <label for="password">
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="password"
+                name="password"
+                maxlength="72"
+                autocomplete="current-password"
+                required
+            >
+
+            <p
+                id="passwordError"
+                class="form-error"
+            ></p>
+
+        </div>
+
+
+        <p
+            id="loginError"
+            class="form-error"
+        ></p>
+
+
+        <div class="form-actions">
+
+            <button
+                type="submit"
+                class="primary-button"
+            >
+                Login
+            </button>
+
+        </div>
+
+    </form>
+
+
+    <hr>
+
+
+    <h2>
+        New Student?
+    </h2>
+
+    <p>
+        Create a student account below.
+    </p>
+
+
+    <form
+        id="registerForm"
+        novalidate
+    >
+
+
+        <div class="form-group">
+
+            <label for="newUsername">
+                Username
+            </label>
+
+            <input
+                type="text"
+                id="newUsername"
+                name="newUsername"
+                maxlength="30"
+                autocomplete="username"
+                required
+            >
+
+            <p
+                id="newUsernameError"
+                class="form-error"
+            ></p>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="newPassword">
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="newPassword"
+                name="newPassword"
+                maxlength="72"
+                autocomplete="new-password"
+                required
+            >
+
+            <p
+                id="newPasswordError"
+                class="form-error"
+            ></p>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="confirmPassword">
+                Confirm Password
+            </label>
+
+            <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                maxlength="72"
+                autocomplete="new-password"
+                required
+            >
+
+            <p
+                id="confirmPasswordError"
+                class="form-error"
+            ></p>
+
+        </div>
+
+
+        <p
+            id="registerSuccess"
+            class="form-success"
+        ></p>
+
+
+        <div class="form-actions">
+
+            <button
+                type="submit"
+                class="secondary-button"
+            >
+                Create Student Account
+            </button>
+
+        </div>
+
+    </form>
+
+
+</div>
+
+
+</div>
+
+</section>
 
 </main>
 
 
-
 <footer class="site-footer">
 
-    <div class="container">
+<div class="container">
 
-        <div class="footer-content">
+    <strong class="footer-logo">
+        CAMPUS<span>HUB</span>
+    </strong>
 
-            <strong>
-                CAMPUS<span>HUB</span>
-            </strong>
+    <p>
+        University events and workshops.
+    </p>
 
-        </div>
+    <p class="copyright">
+        CampusHub student project.
+    </p>
 
-    </div>
+</div>
 
 </footer>
 
 
-
-<script
-    src="https://code.jquery.com/jquery-3.7.1.min.js"
-></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <script src="../js/data.js"></script>
+
 <script src="../js/storage.js"></script>
 
 
@@ -167,89 +297,265 @@
 
 $(document).ready(function () {
 
-    $("#roleForm").on(
+
+    /*
+        LOGIN
+    */
+
+    $("#loginForm").on(
         "submit",
         function (event) {
 
             event.preventDefault();
 
 
-            const role =
-                $("#role").val();
+            $(".form-error").text("");
+
+            $("#registerSuccess").text("");
 
 
-            if (!role) {
+            const username =
+                $("#username")
+                    .val()
+                    .trim();
 
-                $("#roleMessage")
-                    .text(
-                        "Please select a role."
+
+            const password =
+                $("#password")
+                    .val();
+
+
+            let valid = true;
+
+
+            if (!isValidUsername(username)) {
+
+                $("#usernameError").text(
+                    "Enter a valid username using 3-30 letters, numbers, underscores or hyphens."
+                );
+
+                valid = false;
+            }
+
+
+            if (
+                password.length < 1 ||
+                password.length > 72
+            ) {
+
+                $("#passwordError").text(
+                    "Please enter your password."
+                );
+
+                valid = false;
+            }
+
+
+            if (!valid) {
+                return;
+            }
+
+
+            const users = getUsers();
+
+
+            const user = users.find(
+                function (account) {
+
+                    return (
+                        account.username === username &&
+                        account.password === password
                     );
+
+                }
+            );
+
+
+            if (!user) {
+
+                $("#loginError").text(
+                    "Invalid username or password."
+                );
 
                 return;
             }
 
 
-            let user;
+            saveCurrentUser({
+
+                username: user.username,
+
+                role: user.role
+
+            });
 
 
-            if (role === "guest") {
+            window.location.href =
+                "../index.html";
 
-                user = {
-                    id: 0,
-                    name: "Guest",
-                    role: "guest"
-                };
+        }
+    );
 
-            } else if (
-                role === "student"
-            ) {
 
-                user = {
-                    id: 101,
-                    name: "Demo Student",
-                    role: "student"
-                };
+    /*
+        STUDENT REGISTRATION
+    */
 
-            } else {
+    $("#registerForm").on(
+        "submit",
+        function (event) {
 
-                user = {
-                    id: 1,
-                    name: "Demo Organizer",
-                    role: "organizer"
-                };
+            event.preventDefault();
 
+
+            $(".form-error").text("");
+
+            $("#registerSuccess").text("");
+
+
+            const username =
+                $("#newUsername")
+                    .val()
+                    .trim();
+
+
+            const password =
+                $("#newPassword")
+                    .val();
+
+
+            const confirmPassword =
+                $("#confirmPassword")
+                    .val();
+
+
+            let valid = true;
+
+
+            /*
+                Username validation
+            */
+
+            if (!isValidUsername(username)) {
+
+                $("#newUsernameError").text(
+                    "Username must be 3-30 characters and use only letters, numbers, underscores or hyphens."
+                );
+
+                valid = false;
             }
 
 
-            saveCurrentUser(user);
+            /*
+                Password validation
+            */
+
+            if (
+                password.length < 8 ||
+                password.length > 72
+            ) {
+
+                $("#newPasswordError").text(
+                    "Password must contain 8-72 characters."
+                );
+
+                valid = false;
+            }
 
 
-            $("#roleMessage")
-                .hide()
-                .text(
-                    "You are now using the " +
-                    user.role +
-                    " role."
-                )
-                .fadeIn(300);
+            /*
+                Confirm password
+            */
+
+            if (
+                password !== confirmPassword
+            ) {
+
+                $("#confirmPasswordError").text(
+                    "Passwords do not match."
+                );
+
+                valid = false;
+            }
 
 
-            setTimeout(
-                function () {
+            if (!valid) {
+                return;
+            }
 
-                    window.location.href =
-                        "../index.html";
 
-                },
-                700
+            const users = getUsers();
+
+
+            const exists = users.some(
+                function (user) {
+
+                    return (
+                        user.username.toLowerCase() ===
+                        username.toLowerCase()
+                    );
+
+                }
+            );
+
+
+            if (exists) {
+
+                $("#newUsernameError").text(
+                    "That username is already taken."
+                );
+
+                return;
+            }
+
+
+            /*
+                All self-created accounts
+                are students.
+            */
+
+            users.push({
+
+                username: username,
+
+                password: password,
+
+                role: "student"
+
+            });
+
+
+            saveUsers(users);
+
+
+            $("#registerForm")[0].reset();
+
+
+            $("#registerSuccess").text(
+                "Student account created. You can now log in."
             );
 
         }
     );
 
+
+    /*
+        Username safety check
+    */
+
+    function isValidUsername(username) {
+
+        return /^[A-Za-z0-9_-]{3,30}$/.test(
+            username
+        );
+
+    }
+
+
 });
 
 </script>
+
 
 </body>
 

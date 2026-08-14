@@ -1,16 +1,24 @@
 let events = getEvents();
 
+let registrations = getRegistrations();
+
 let currentUser = getCurrentUser();
 
 
 $(document).ready(function () {
 
-    populateFilters();
+    if ($("#eventsContainer").length) {
 
-    displayEvents(events);
+        populateFilters();
 
-    $("#search, #category, #department, #date")
-        .on("input change", filterEvents);
+        displayEvents(events);
+
+        $("#search, #category, #department, #date")
+            .on(
+                "input change",
+                filterEvents
+            );
+    }
 
 });
 
@@ -55,7 +63,6 @@ function populateFilters() {
         );
 
     });
-
 }
 
 
@@ -63,7 +70,6 @@ function displayEvents(eventList) {
 
     const container =
         $("#eventsContainer");
-
 
     container.empty();
 
@@ -160,17 +166,8 @@ function displayEvents(eventList) {
             $("<p>")
                 .addClass("event-meta")
                 .text(
-                    "Time: " +
-                    event.time
-                )
-        );
-
-
-        body.append(
-            $("<p>")
-                .addClass("event-meta")
-                .text(
-                    "Location: " +
+                    event.time +
+                    " · " +
                     event.location
                 )
         );
@@ -180,7 +177,6 @@ function displayEvents(eventList) {
             $("<p>")
                 .addClass("event-meta")
                 .text(
-                    "Department: " +
                     event.department
                 )
         );
@@ -191,7 +187,7 @@ function displayEvents(eventList) {
                 .addClass("event-link")
                 .attr(
                     "href",
-                    "pages/event.html?id=" +
+                    "event.html?id=" +
                     event.id
                 )
                 .text("View Event")
@@ -211,8 +207,7 @@ function displayEvents(eventList) {
 
     container
         .hide()
-        .fadeIn(300);
-
+        .fadeIn(250);
 }
 
 
@@ -276,5 +271,148 @@ function filterEvents() {
 
 
     displayEvents(filteredEvents);
+}
 
+
+/* =========================
+   EVENT CRUD
+========================= */
+
+
+function createEvent(eventData) {
+
+    const newEvent = {
+
+        id: Date.now(),
+
+        title: eventData.title,
+
+        description:
+            eventData.description,
+
+        date: eventData.date,
+
+        time: eventData.time,
+
+        location:
+            eventData.location,
+
+        category:
+            eventData.category,
+
+        department:
+            eventData.department,
+
+        organizerId:
+            currentUser.id
+    };
+
+
+    events.push(newEvent);
+
+    saveEvents(events);
+
+    return newEvent;
+}
+
+
+function updateEvent(eventId, eventData) {
+
+    const index =
+        events.findIndex(function (event) {
+
+            return event.id === eventId;
+
+        });
+
+
+    if (index === -1) {
+        return false;
+    }
+
+
+    if (
+        events[index].organizerId !==
+        currentUser.id
+    ) {
+        return false;
+    }
+
+
+    events[index] = {
+
+        ...events[index],
+
+        title: eventData.title,
+
+        description:
+            eventData.description,
+
+        date: eventData.date,
+
+        time: eventData.time,
+
+        location:
+            eventData.location,
+
+        category:
+            eventData.category,
+
+        department:
+            eventData.department
+    };
+
+
+    saveEvents(events);
+
+    return true;
+}
+
+
+function deleteEvent(eventId) {
+
+    const event =
+        events.find(function (item) {
+
+            return item.id === eventId;
+
+        });
+
+
+    if (!event) {
+        return false;
+    }
+
+
+    if (
+        event.organizerId !==
+        currentUser.id
+    ) {
+        return false;
+    }
+
+
+    events =
+        events.filter(function (item) {
+
+            return item.id !== eventId;
+
+        });
+
+
+    saveEvents(events);
+
+
+    registrations =
+        registrations.filter(function (item) {
+
+            return item.eventId !== eventId;
+
+        });
+
+
+    saveRegistrations(registrations);
+
+
+    return true;
 }
