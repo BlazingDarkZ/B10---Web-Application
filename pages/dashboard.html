@@ -1,19 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<a href="users.html">
-    Manage Users
-</a>
-
-<a
-    id="adminUsersLink"
-    href="users.html"
->
-    Manage Users
-</a>
-
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -21,18 +9,15 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Organizer Dashboard - CampusHub</title>
+    <title>Dashboard - CampusHub</title>
 
     <link
         rel="stylesheet"
         href="../css/style.css"
     >
-
 </head>
 
-
 <body>
-
 
 <header class="site-header">
 
@@ -45,33 +30,27 @@
             CAMPUS<span>HUB</span>
         </a>
 
-
         <div class="nav-links">
 
-    <a href="../index.html">
-        Events
-    </a>
+            <a href="../index.html">
+                Events
+            </a>
 
-    <a href="my-registrations.html">
-        My Registrations
-    </a>
+            <a
+                href="event-form.html"
+                id="createEventLink"
+            >
+                Create Event
+            </a>
 
-    <a href="dashboard.html">
-        Dashboard
-    </a>
+            <a
+                href="users.html"
+                id="adminUsersLink"
+            >
+                Manage Users
+            </a>
 
-    <a
-        id="adminUsersLink"
-        href="users.html"
-    >
-        Manage Users
-    </a>
-
-    <a href="login.html">
-        Login
-    </a>
-
-</div>
+        </div>
 
     </nav>
 
@@ -84,52 +63,19 @@
 
 <div class="container">
 
-    <div class="section-header">
+    <p class="eyebrow">
+        DASHBOARD
+    </p>
 
-        <div>
-
-            <p class="eyebrow">
-                ORGANIZER
-            </p>
-
-            <h1>
-                Dashboard
-            </h1>
-
-        </div>
-
-        <a
-            href="event-form.html"
-            class="event-link"
-        >
-            + Create Event
-        </a>
-
-    </div>
+    <h1 id="dashboardTitle">
+        My Events
+    </h1>
 
 
-    <div id="dashboardEvents">
-
-    </div>
-
-
-    <section id="registrationsSection">
-
-        <p class="eyebrow">
-            REGISTRATIONS
-        </p>
-
-        <h2>
-            Registered Students
-        </h2>
-
-
-        <div id="studentRegistrations">
-
-        </div>
-
-    </section>
-
+    <div
+        id="dashboardEvents"
+        class="event-grid"
+    ></div>
 
 </div>
 
@@ -140,33 +86,199 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
+<script src="../js/security.js"></script>
 <script src="../js/data.js"></script>
 <script src="../js/storage.js"></script>
-<script src="../js/app.js"></script>
+<script src="../js/events.js"></script>
 
 
 <script>
 
 $(document).ready(function () {
 
-    
-    const currentUser = getCurrentUser();
+    const user =
+        getCurrentUser();
 
-    if (currentUser.role === "admin") {
 
-        $("#adminUsersLink").show();
+    if (
+        user.role !== "student" &&
+        user.role !== "admin"
+    ) {
 
-    } else {
+        $("main").html(
+            $("<section>")
+                .addClass(
+                    "events-section"
+                )
+                .append(
+                    $("<div>")
+                        .addClass(
+                            "container"
+                        )
+                        .append(
+                            $("<p>")
+                                .text(
+                                    "Please log in first."
+                                )
+                        )
+                )
+        );
+
+        return;
+
+    }
+
+
+    if (
+        user.role !== "admin"
+    ) {
 
         $("#adminUsersLink").hide();
 
+    } else {
+
+        $("#dashboardTitle").text(
+            "All Events"
+        );
+
     }
+
+
+    const events =
+        getEvents();
+
+
+    const displayedEvents =
+        user.role === "admin"
+            ? events
+            : events.filter(
+                function (event) {
+
+                    return (
+                        event.ownerUsername ===
+                        user.username
+                    );
+
+                }
+            );
+
+
+    const container =
+        $("#dashboardEvents");
+
+
+    if (
+        displayedEvents.length === 0
+    ) {
+
+        container.append(
+            $("<p>")
+                .text(
+                    "No events found."
+                )
+        );
+
+        return;
+
+    }
+
+
+    displayedEvents.forEach(
+        function (event) {
+
+            const card =
+                $("<article>")
+                    .addClass(
+                        "event-card"
+                    );
+
+
+            $("<p>")
+                .addClass("eyebrow")
+                .text(event.category)
+                .appendTo(card);
+
+
+            $("<h2>")
+                .text(event.title)
+                .appendTo(card);
+
+
+            $("<p>")
+                .text(
+                    event.date +
+                    " · " +
+                    event.time
+                )
+                .appendTo(card);
+
+
+            $("<p>")
+                .text(
+                    "Created by: " +
+                    event.ownerUsername
+                )
+                .appendTo(card);
+
+
+            $("<a>")
+                .addClass(
+                    "secondary-button"
+                )
+                .attr(
+                    "href",
+                    "event-form.html?id=" +
+                    event.id
+                )
+                .text("Edit")
+                .appendTo(card);
+
+
+            const remove =
+                $("<button>")
+                    .addClass(
+                        "danger-button"
+                    )
+                    .text("Delete");
+
+
+            remove.on(
+                "click",
+                function () {
+
+                    if (
+                        !confirm(
+                            "Delete this event?"
+                        )
+                    ) {
+                        return;
+                    }
+
+
+                    if (
+                        deleteEvent(
+                            event.id
+                        )
+                    ) {
+
+                        window.location.reload();
+
+                    }
+
+                }
+            );
+
+
+            card.append(remove);
+
+            container.append(card);
+
+        }
+    );
 
 });
 
 </script>
 
-
 </body>
-
 </html>

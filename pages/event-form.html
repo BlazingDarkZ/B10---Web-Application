@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -10,18 +9,15 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>CampusHub - Event Form</title>
+    <title>Event Form - CampusHub</title>
 
     <link
         rel="stylesheet"
         href="../css/style.css"
     >
-
 </head>
 
-
 <body>
-
 
 <header class="site-header">
 
@@ -34,7 +30,6 @@
             CAMPUS<span>HUB</span>
         </a>
 
-
         <div class="nav-links">
 
             <a href="../index.html">
@@ -43,14 +38,6 @@
 
             <a href="dashboard.html">
                 Dashboard
-            </a>
-
-            <a href="my-registrations.html">
-                My Registrations
-            </a>
-
-            <a href="login.html">
-                Login
             </a>
 
         </div>
@@ -66,29 +53,27 @@
 
 <div class="container">
 
-
 <div class="form-card">
 
     <p class="eyebrow">
-        CAMPUS EVENT
+        EVENT
     </p>
 
     <h1 id="formTitle">
         Create Event
     </h1>
 
-    <p>
-        Create or update a campus event.
-    </p>
+
+    <p
+        id="accessError"
+        class="form-error"
+    ></p>
 
 
     <form
         id="eventForm"
         novalidate
     >
-
-
-        <!-- TITLE -->
 
         <div class="form-group">
 
@@ -111,8 +96,6 @@
         </div>
 
 
-        <!-- DESCRIPTION -->
-
         <div class="form-group">
 
             <label for="description">
@@ -121,7 +104,6 @@
 
             <textarea
                 id="description"
-                rows="5"
                 maxlength="500"
                 required
             ></textarea>
@@ -133,8 +115,6 @@
 
         </div>
 
-
-        <!-- DATE -->
 
         <div class="form-group">
 
@@ -156,8 +136,6 @@
         </div>
 
 
-        <!-- TIME -->
-
         <div class="form-group">
 
             <label for="time">
@@ -177,8 +155,6 @@
 
         </div>
 
-
-        <!-- LOCATION -->
 
         <div class="form-group">
 
@@ -201,8 +177,6 @@
         </div>
 
 
-        <!-- CATEGORY -->
-
         <div class="form-group">
 
             <label for="category">
@@ -215,7 +189,7 @@
             >
 
                 <option value="">
-                    Select a category
+                    Select Category
                 </option>
 
                 <option value="Workshop">
@@ -244,8 +218,6 @@
         </div>
 
 
-        <!-- DEPARTMENT -->
-
         <div class="form-group">
 
             <label for="department">
@@ -258,19 +230,19 @@
             >
 
                 <option value="">
-                    Select a department
+                    Select Department
                 </option>
 
                 <option value="Computer Science">
                     Computer Science
                 </option>
 
-                <option value="Humanities">
-                    Humanities
-                </option>
-
                 <option value="Business">
                     Business
+                </option>
+
+                <option value="Humanities">
+                    Humanities
                 </option>
 
                 <option value="University">
@@ -311,11 +283,9 @@
 
         </div>
 
-
     </form>
 
 </div>
-
 
 </div>
 
@@ -324,29 +294,11 @@
 </main>
 
 
-<footer class="site-footer">
-
-<div class="container">
-
-    <strong class="footer-logo">
-        CAMPUS<span>HUB</span>
-    </strong>
-
-    <p>
-        University events and workshops.
-    </p>
-
-</div>
-
-</footer>
-
-
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
+<script src="../js/security.js"></script>
 <script src="../js/data.js"></script>
-
 <script src="../js/storage.js"></script>
-
 <script src="../js/events.js"></script>
 
 
@@ -354,35 +306,25 @@
 
 $(document).ready(function () {
 
-
-    const currentUser =
+    const user =
         getCurrentUser();
 
 
-    /*
-        Only students and admins
-        can create/edit events.
-    */
-
     if (
-        currentUser.role !== "student" &&
-        currentUser.role !== "admin"
+        user.role !== "student" &&
+        user.role !== "admin"
     ) {
-
-        $("#formError").text(
-            "You must be logged in as a student or admin to manage events."
-        );
 
         $("#eventForm").hide();
 
+        $("#accessError").text(
+            "You must be logged in to manage events."
+        );
+
         return;
+
     }
 
-
-    /*
-        Check whether we are editing
-        an existing event.
-    */
 
     const params =
         new URLSearchParams(
@@ -399,70 +341,54 @@ $(document).ready(function () {
 
     if (eventId) {
 
-        const events =
-            getEvents();
-
-
         editingEvent =
-            events.find(
+            getEvents().find(
                 function (event) {
 
-                    return String(event.id) ===
-                        String(eventId);
+                    return (
+                        String(event.id) ===
+                        String(eventId)
+                    );
 
                 }
             );
 
 
-        /*
-            Event does not exist.
-        */
-
         if (!editingEvent) {
-
-            $("#formError").text(
-                "The requested event could not be found."
-            );
 
             $("#eventForm").hide();
 
+            $("#accessError").text(
+                "Event not found."
+            );
+
             return;
+
         }
 
-
-        /*
-            Check ownership/permission.
-        */
 
         if (
             !canManageEvent(
                 editingEvent,
-                currentUser
+                user
             )
         ) {
 
-            $("#formError").text(
-                "You do not have permission to edit this event."
-            );
-
             $("#eventForm").hide();
 
+            $("#accessError").text(
+                "You cannot edit this event."
+            );
+
             return;
+
         }
 
-
-        /*
-            Change page title.
-        */
 
         $("#formTitle").text(
             "Edit Event"
         );
 
-
-        /*
-            Fill form with existing data.
-        */
 
         $("#title").val(
             editingEvent.title
@@ -495,51 +421,61 @@ $(document).ready(function () {
     }
 
 
-    /*
-        Form submission
-    */
-
     $("#eventForm").on(
         "submit",
         function (event) {
 
             event.preventDefault();
 
-
-            /*
-                Clear previous errors.
-            */
-
             $(".form-error").text("");
 
 
-            const title =
-                $("#title").val().trim();
+            const rawTitle =
+                $("#title").val();
 
+            const rawDescription =
+                $("#description").val();
+
+            const rawLocation =
+                $("#location").val();
+
+
+            if (
+                !isSafeInput(rawTitle) ||
+                !isSafeInput(rawDescription) ||
+                !isSafeInput(rawLocation)
+            ) {
+
+                $("#formError").text(
+                    "Your input contains invalid code."
+                );
+
+                return;
+
+            }
+
+
+            const title =
+                sanitizeInput(rawTitle);
 
             const description =
-                $("#description")
-                    .val()
-                    .trim();
+                sanitizeInput(
+                    rawDescription
+                );
 
+            const location =
+                sanitizeInput(
+                    rawLocation
+                );
 
             const date =
                 $("#date").val();
 
-
             const time =
                 $("#time").val();
 
-
-            const location =
-                $("#location")
-                    .val()
-                    .trim();
-
-
             const category =
                 $("#category").val();
-
 
             const department =
                 $("#department").val();
@@ -547,10 +483,6 @@ $(document).ready(function () {
 
             let valid = true;
 
-
-            /*
-                TITLE
-            */
 
             if (
                 title.length < 3 ||
@@ -566,10 +498,6 @@ $(document).ready(function () {
             }
 
 
-            /*
-                DESCRIPTION
-            */
-
             if (
                 description.length < 10 ||
                 description.length > 500
@@ -584,10 +512,6 @@ $(document).ready(function () {
             }
 
 
-            /*
-                DATE
-            */
-
             if (!date) {
 
                 $("#dateError").text(
@@ -599,10 +523,6 @@ $(document).ready(function () {
             }
 
 
-            /*
-                TIME
-            */
-
             if (!time) {
 
                 $("#timeError").text(
@@ -613,10 +533,6 @@ $(document).ready(function () {
 
             }
 
-
-            /*
-                LOCATION
-            */
 
             if (
                 location.length < 2 ||
@@ -632,10 +548,6 @@ $(document).ready(function () {
             }
 
 
-            /*
-                CATEGORY
-            */
-
             if (!category) {
 
                 $("#categoryError").text(
@@ -646,10 +558,6 @@ $(document).ready(function () {
 
             }
 
-
-            /*
-                DEPARTMENT
-            */
 
             if (!department) {
 
@@ -667,75 +575,48 @@ $(document).ready(function () {
             }
 
 
-            /*
-                Create or update.
-            */
-
             const eventData = {
-
                 title: title,
-
                 description: description,
-
                 date: date,
-
                 time: time,
-
                 location: location,
-
                 category: category,
-
                 department: department
-
             };
+
+
+            let success;
 
 
             if (editingEvent) {
 
-
-                const success =
+                success =
                     updateEvent(
                         editingEvent.id,
                         eventData
                     );
 
-
-                if (!success) {
-
-                    $("#formError").text(
-                        "Unable to update this event."
-                    );
-
-                    return;
-
-                }
-
-
             } else {
 
-
-                const newEvent =
+                success =
                     createEvent(
                         eventData
                     );
 
-
-                if (!newEvent) {
-
-                    $("#formError").text(
-                        "Unable to create this event."
-                    );
-
-                    return;
-
-                }
-
             }
 
 
-            /*
-                Return to homepage.
-            */
+            if (!success) {
+
+                $("#formError").text(
+                    "Unable to save event."
+                );
+
+                return;
+
+            }
+
 
             window.location.href =
                 "../index.html";
@@ -747,7 +628,5 @@ $(document).ready(function () {
 
 </script>
 
-
 </body>
-
 </html>

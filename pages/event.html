@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -10,18 +9,15 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>CampusHub - Event Details</title>
+    <title>Event Details - CampusHub</title>
 
     <link
         rel="stylesheet"
         href="../css/style.css"
     >
-
 </head>
 
-
 <body>
-
 
 <header class="site-header">
 
@@ -34,7 +30,6 @@
             CAMPUS<span>HUB</span>
         </a>
 
-
         <div class="nav-links">
 
             <a href="../index.html">
@@ -43,10 +38,6 @@
 
             <a href="dashboard.html">
                 Dashboard
-            </a>
-
-            <a href="my-registrations.html">
-                My Registrations
             </a>
 
             <a href="login.html">
@@ -66,16 +57,7 @@
 
 <div class="container">
 
-
-<div id="eventContainer">
-
-
-    <!-- Event information is inserted here
-         dynamically using JavaScript. -->
-
-
-</div>
-
+    <div id="eventContainer"></div>
 
 </div>
 
@@ -84,36 +66,17 @@
 </main>
 
 
-<footer class="site-footer">
-
-<div class="container">
-
-    <strong class="footer-logo">
-        CAMPUS<span>HUB</span>
-    </strong>
-
-    <p>
-        University events and workshops.
-    </p>
-
-</div>
-
-</footer>
-
-
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
+<script src="../js/security.js"></script>
 <script src="../js/data.js"></script>
-
 <script src="../js/storage.js"></script>
-
 <script src="../js/events.js"></script>
 
 
 <script>
 
 $(document).ready(function () {
-
 
     const params =
         new URLSearchParams(
@@ -125,57 +88,22 @@ $(document).ready(function () {
         params.get("id");
 
 
-    const container =
-        $("#eventContainer");
-
-
-    /*
-        No event ID.
-    */
-
-    if (!eventId) {
-
-        container.append(
-
-            $("<div>")
-                .addClass("form-card")
-                .append(
-                    $("<h1>")
-                        .text(
-                            "Event not found"
-                        )
-                )
-                .append(
-                    $("<p>")
-                        .text(
-                            "No event was selected."
-                        )
-                )
-
-        );
-
-        return;
-    }
-
-
-    const events =
-        getEvents();
-
-
     const event =
-        events.find(
+        getEvents().find(
             function (item) {
 
-                return String(item.id) ===
-                    String(eventId);
+                return (
+                    String(item.id) ===
+                    String(eventId)
+                );
 
             }
         );
 
 
-    /*
-        Event does not exist.
-    */
+    const container =
+        $("#eventContainer");
+
 
     if (!event) {
 
@@ -189,35 +117,22 @@ $(document).ready(function () {
                             "Event not found"
                         )
                 )
-                .append(
-                    $("<p>")
-                        .text(
-                            "This event no longer exists."
-                        )
-                )
 
         );
 
         return;
+
     }
 
 
-    const currentUser =
+    const user =
         getCurrentUser();
 
-
-    /*
-        Main event card
-    */
 
     const card =
         $("<article>")
             .addClass("form-card");
 
-
-    /*
-        Category
-    */
 
     $("<p>")
         .addClass("eyebrow")
@@ -225,52 +140,38 @@ $(document).ready(function () {
         .appendTo(card);
 
 
-    /*
-        Title
-    */
-
     $("<h1>")
         .text(event.title)
         .appendTo(card);
 
-
-    /*
-        Description
-    */
 
     $("<p>")
         .text(event.description)
         .appendTo(card);
 
 
-    /*
-        Event information
-    */
-
-    const information =
-        $("<div>")
-            .addClass("event-information");
+    $("<p>")
+        .text(
+            "Date: " +
+            event.date
+        )
+        .appendTo(card);
 
 
     $("<p>")
         .text(
-            "Date: " + event.date
+            "Time: " +
+            event.time
         )
-        .appendTo(information);
+        .appendTo(card);
 
 
     $("<p>")
         .text(
-            "Time: " + event.time
+            "Location: " +
+            event.location
         )
-        .appendTo(information);
-
-
-    $("<p>")
-        .text(
-            "Location: " + event.location
-        )
-        .appendTo(information);
+        .appendTo(card);
 
 
     $("<p>")
@@ -278,7 +179,7 @@ $(document).ready(function () {
             "Department: " +
             event.department
         )
-        .appendTo(information);
+        .appendTo(card);
 
 
     $("<p>")
@@ -286,131 +187,82 @@ $(document).ready(function () {
             "Created by: " +
             event.ownerUsername
         )
-        .appendTo(information);
+        .appendTo(card);
 
-
-    card.append(information);
-
-
-    /*
-        Buttons
-    */
 
     const actions =
         $("<div>")
-            .addClass("form-actions");
+            .addClass(
+                "form-actions"
+            );
 
-
-    /*
-        STUDENT
-        Register button
-    */
 
     if (
-        currentUser.role === "student"
+        user.role === "student" &&
+        event.ownerUsername !==
+            user.username
     ) {
 
-        const registerButton =
-            $("<a>")
-                .attr(
-                    "href",
-                    "register.html?eventId=" +
-                    event.id
-                )
-                .addClass(
-                    "primary-button"
-                )
-                .text(
-                    "Register"
-                );
-
-
-        actions.append(
-            registerButton
-        );
+        $("<a>")
+            .addClass("primary-button")
+            .attr(
+                "href",
+                "register.html?eventId=" +
+                event.id
+            )
+            .text("Register")
+            .appendTo(actions);
 
     }
 
 
-    /*
-        OWNER OR ADMIN
-        Edit + Delete
-    */
-
     if (
         canManageEvent(
             event,
-            currentUser
+            user
         )
     ) {
 
-
-        const editButton =
-            $("<a>")
-                .attr(
-                    "href",
-                    "event-form.html?id=" +
-                    event.id
-                )
-                .addClass(
-                    "secondary-button"
-                )
-                .text(
-                    "Edit"
-                );
-
-
-        actions.append(
-            editButton
-        );
+        $("<a>")
+            .addClass(
+                "secondary-button"
+            )
+            .attr(
+                "href",
+                "event-form.html?id=" +
+                event.id
+            )
+            .text("Edit")
+            .appendTo(actions);
 
 
         const deleteButton =
             $("<button>")
-                .attr(
-                    "type",
-                    "button"
-                )
                 .addClass(
-                    "secondary-button"
+                    "danger-button"
                 )
-                .text(
-                    "Delete"
-                );
+                .text("Delete");
 
 
         deleteButton.on(
             "click",
             function () {
 
-
-                const confirmed =
-                    confirm(
-                        "Are you sure you want to delete this event?"
-                    );
-
-
-                if (!confirmed) {
+                if (
+                    !confirm(
+                        "Delete this event?"
+                    )
+                ) {
                     return;
                 }
 
 
-                const success =
-                    deleteEvent(
-                        event.id
-                    );
-
-
-                if (success) {
+                if (
+                    deleteEvent(event.id)
+                ) {
 
                     window.location.href =
                         "../index.html";
-
-                } else {
-
-                    alert(
-                        "You do not have permission to delete this event."
-                    );
 
                 }
 
@@ -425,45 +277,28 @@ $(document).ready(function () {
     }
 
 
-    /*
-        GUEST
-    */
-
     if (
-        currentUser.role === "guest"
+        user.role === "guest"
     ) {
 
-        const loginMessage =
-            $("<p>")
-                .text(
-                    "Please log in as a student to register for this event."
-                );
-
-
-        actions.append(
-            loginMessage
-        );
+        $("<p>")
+            .text(
+                "Login as a student to register."
+            )
+            .appendTo(actions);
 
     }
 
 
     card.append(actions);
 
-
     container.append(card);
 
-
-    /*
-        jQuery visual effect.
-    */
-
-    card.hide().fadeIn(400);
+    card.hide().fadeIn(300);
 
 });
 
 </script>
 
-
 </body>
-
 </html>

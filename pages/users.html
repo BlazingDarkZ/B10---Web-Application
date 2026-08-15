@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -16,12 +15,9 @@
         rel="stylesheet"
         href="../css/style.css"
     >
-
 </head>
 
-
 <body>
-
 
 <header class="site-header">
 
@@ -34,23 +30,14 @@
             CAMPUS<span>HUB</span>
         </a>
 
-
         <div class="nav-links">
-
-            <a href="../index.html">
-                Events
-            </a>
 
             <a href="dashboard.html">
                 Dashboard
             </a>
 
-            <a href="users.html">
-                Users
-            </a>
-
-            <a href="login.html">
-                Login
+            <a href="../index.html">
+                Events
             </a>
 
         </div>
@@ -66,47 +53,16 @@
 
 <div class="container">
 
-
-<div class="section-header">
-
-    <div>
-
-        <p class="eyebrow">
-            ADMINISTRATION
-        </p>
-
-        <h1>
-            Manage Users
-        </h1>
-
-    </div>
-
-</div>
-
-
-<div
-    id="accessDenied"
-    class="form-card"
->
-
-    <h2>
-        Access denied
-    </h2>
-
-    <p>
-        Only administrators can manage user roles.
+    <p class="eyebrow">
+        ADMIN
     </p>
 
-</div>
+    <h1>
+        Manage Users
+    </h1>
 
 
-<div
-    id="userManagement"
-    class="event-grid"
->
-
-</div>
-
+    <div id="userList"></div>
 
 </div>
 
@@ -115,23 +71,10 @@
 </main>
 
 
-<footer class="site-footer">
-
-<div class="container">
-
-    <strong class="footer-logo">
-        CAMPUS<span>HUB</span>
-    </strong>
-
-</div>
-
-</footer>
-
-
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
+<script src="../js/security.js"></script>
 <script src="../js/data.js"></script>
-
 <script src="../js/storage.js"></script>
 
 
@@ -139,58 +82,47 @@
 
 $(document).ready(function () {
 
-
     const currentUser =
         getCurrentUser();
 
 
-    /*
-        Only admins may access this page.
-    */
+    const container =
+        $("#userList");
+
 
     if (
         currentUser.role !== "admin"
     ) {
 
-        $("#userManagement").hide();
+        container.append(
+            $("<p>")
+                .text(
+                    "Access denied. Admin only."
+                )
+        );
 
         return;
 
     }
 
 
-    $("#accessDenied").hide();
-
-
-    displayUsers();
-
-
     function displayUsers() {
+
+        container.empty();
+
 
         const users =
             getUsers();
 
 
-        const container =
-            $("#userManagement");
-
-
-        container.empty();
-
-
         users.forEach(
             function (user) {
 
-
                 const card =
                     $("<article>")
-                        .addClass("event-card");
-
-
-                $("<p>")
-                    .addClass("eyebrow")
-                    .text("USER")
-                    .appendTo(card);
+                        .addClass(
+                            "registration-item"
+                        );
 
 
                 $("<h2>")
@@ -200,16 +132,11 @@ $(document).ready(function () {
 
                 $("<p>")
                     .text(
-                        "Current role: " +
+                        "Role: " +
                         user.role
                     )
                     .appendTo(card);
 
-
-                /*
-                    Admin cannot change
-                    their own role.
-                */
 
                 if (
                     user.username ===
@@ -222,98 +149,100 @@ $(document).ready(function () {
                         )
                         .appendTo(card);
 
-                } else {
 
+                    container.append(card);
 
-                    const form =
-                        $("<form>");
-
-
-                    const label =
-                        $("<label>")
-                            .attr(
-                                "for",
-                                "role-" +
-                                user.username
-                            )
-                            .text(
-                                "Set role"
-                            );
-
-
-                    const select =
-                        $("<select>")
-                            .attr(
-                                "id",
-                                "role-" +
-                                user.username
-                            );
-
-
-                    select.append(
-                        $("<option>")
-                            .val("student")
-                            .text("Student")
-                    );
-
-
-                    select.append(
-                        $("<option>")
-                            .val("admin")
-                            .text("Admin")
-                    );
-
-
-                    select.val(
-                        user.role
-                    );
-
-
-                    const button =
-                        $("<button>")
-                            .attr(
-                                "type",
-                                "submit"
-                            )
-                            .addClass(
-                                "primary-button"
-                            )
-                            .text(
-                                "Save Role"
-                            );
-
-
-                    form.append(label);
-
-                    form.append(select);
-
-                    form.append(button);
-
-
-                    form.on(
-                        "submit",
-                        function (event) {
-
-                            event.preventDefault();
-
-
-                            const newRole =
-                                select.val();
-
-
-                            changeUserRole(
-                                user.username,
-                                newRole
-                            );
-
-                        }
-                    );
-
-
-                    card.append(form);
+                    return;
 
                 }
 
+
+                const select =
+                    $("<select>");
+
+
+                select.append(
+                    $("<option>")
+                        .val("student")
+                        .text("Student")
+                );
+
+
+                select.append(
+                    $("<option>")
+                        .val("admin")
+                        .text("Admin")
+                );
+
+
+                select.val(
+                    user.role
+                );
+
+
+                const button =
+                    $("<button>")
+                        .addClass(
+                            "primary-button"
+                        )
+                        .text(
+                            "Save Role"
+                        );
+
+
+                button.on(
+                    "click",
+                    function () {
+
+                        const users =
+                            getUsers();
+
+
+                        const account =
+                            users.find(
+                                function (item) {
+
+                                    return (
+                                        item.username ===
+                                        user.username
+                                    );
+
+                                }
+                            );
+
+
+                        if (!account) {
+                            return;
+                        }
+
+
+                        account.role =
+                            select.val();
+
+
+                        saveUsers(users);
+
+
+                        displayUsers();
+
+                    }
+                );
+
+
+                const actions =
+                    $("<div>")
+                        .addClass(
+                            "form-actions"
+                        );
+
+
+                actions.append(
+                    select,
+                    button
+                );
+
+
+                card.append(actions);
 
                 container.append(card);
 
@@ -323,61 +252,11 @@ $(document).ready(function () {
     }
 
 
-    function changeUserRole(
-        username,
-        role
-    ) {
-
-        const users =
-            getUsers();
-
-
-        const user =
-            users.find(
-                function (account) {
-
-                    return (
-                        account.username ===
-                        username
-                    );
-
-                }
-            );
-
-
-        if (!user) {
-            return;
-        }
-
-
-        /*
-            Only these roles exist.
-        */
-
-        if (
-            role !== "student" &&
-            role !== "admin"
-        ) {
-
-            return;
-        }
-
-
-        user.role = role;
-
-
-        saveUsers(users);
-
-
-        displayUsers();
-
-    }
+    displayUsers();
 
 });
 
 </script>
 
-
 </body>
-
 </html>

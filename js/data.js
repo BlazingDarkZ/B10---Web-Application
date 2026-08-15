@@ -1,5 +1,4 @@
 const initialEvents = [
-
     {
         id: 1,
         title: "Introduction to Web Development",
@@ -11,7 +10,6 @@ const initialEvents = [
         department: "Computer Science",
         ownerUsername: "admin"
     },
-
     {
         id: 2,
         title: "Career Day 2026",
@@ -20,10 +18,9 @@ const initialEvents = [
         time: "11:00",
         location: "Main Hall",
         category: "Career",
-        department: "University",
+        department: "Business",
         ownerUsername: "admin"
     },
-
     {
         id: 3,
         title: "Academic Writing Workshop",
@@ -31,23 +28,18 @@ const initialEvents = [
         date: "2026-09-20",
         time: "15:00",
         location: "Library Room 2",
-        category: "Workshop",
+        category: "Academic",
         department: "Humanities",
         ownerUsername: "admin"
     }
-
 ];
-
 
 const initialRegistrations = [];
 
-
 const initialUsers = [
-
     {
         username: "admin",
         password: "admin",
         role: "admin"
     }
-
 ];

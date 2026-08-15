@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -10,34 +9,26 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>My Registrations - CampusHub</title>
+    <title>My Registrations</title>
 
     <link
         rel="stylesheet"
         href="../css/style.css"
     >
-
 </head>
 
-
 <body>
-
 
 <header class="site-header">
 
     <nav class="navbar">
 
-        <div class="navbar">
-
-            <a
-                href="../index.html"
-                class="logo"
-            >
-                CAMPUS<span>HUB</span>
-            </a>
-
-        </div>
-
+        <a
+            href="../index.html"
+            class="logo"
+        >
+            CAMPUS<span>HUB</span>
+        </a>
 
         <div class="nav-links">
 
@@ -47,10 +38,6 @@
 
             <a href="dashboard.html">
                 Dashboard
-            </a>
-
-            <a href="login.html">
-                Login
             </a>
 
         </div>
@@ -66,22 +53,16 @@
 
 <div class="container">
 
-    <div class="form-card">
+    <p class="eyebrow">
+        STUDENT
+    </p>
 
-        <p class="eyebrow">
-            STUDENT
-        </p>
-
-        <h1>
-            My Registrations
-        </h1>
-
-    </div>
+    <h1>
+        My Registrations
+    </h1>
 
 
-    <div id="registrationList">
-
-    </div>
+    <div id="registrationList"></div>
 
 </div>
 
@@ -92,22 +73,15 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
+<script src="../js/security.js"></script>
 <script src="../js/data.js"></script>
 <script src="../js/storage.js"></script>
+<script src="../js/registrations.js"></script>
 
 
 <script>
 
 $(document).ready(function () {
-
-
-    displayRegistrations();
-
-});
-
-
-function displayRegistrations() {
-
 
     const user =
         getCurrentUser();
@@ -117,601 +91,404 @@ function displayRegistrations() {
         $("#registrationList");
 
 
-    container.empty();
-
-
     if (
         user.role !== "student"
     ) {
 
         container.append(
-
-            $("<div>")
-                .addClass(
-                    "form-card"
+            $("<p>")
+                .text(
+                    "Student login required."
                 )
-                .append(
-
-                    $("<p>")
-                        .text(
-                            "Please login as a student to view registrations."
-                        )
-
-                )
-                .append(
-
-                    $("<a>")
-                        .addClass(
-                            "event-link"
-                        )
-                        .attr(
-                            "href",
-                            "login.html"
-                        )
-                        .text(
-                            "Login"
-                        )
-
-                )
-
         );
 
         return;
+
     }
 
 
-    const events =
-        getEvents();
+    function displayRegistrations() {
+
+        container.empty();
 
 
-    const registrations =
-        getRegistrations();
+        const registrations =
+            getStudentRegistrations(
+                user.username
+            );
 
 
-    const mine =
-        registrations.filter(
+        if (
+            registrations.length === 0
+        ) {
+
+            container.append(
+                $("<p>")
+                    .text(
+                        "You have no registrations."
+                    )
+            );
+
+            return;
+
+        }
+
+
+        registrations.forEach(
             function (registration) {
 
-                return (
-                    registration.studentId ===
-                    user.id
-                );
+                const event =
+                    getEvents().find(
+                        function (item) {
 
-            }
-        );
+                            return (
+                                String(item.id) ===
+                                String(
+                                    registration.eventId
+                                )
+                            );
 
-
-    if (mine.length === 0) {
-
-        container.append(
-
-            $("<div>")
-                .addClass(
-                    "form-card"
-                )
-                .append(
-
-                    $("<p>")
-                        .text(
-                            "You are not registered for any events."
-                        )
-
-                )
-
-        );
-
-        return;
-    }
-
-
-    mine.forEach(
-        function (registration) {
-
-
-            const event =
-                events.find(
-                    function (item) {
-
-                        return (
-                            item.id ===
-                            registration.eventId
-                        );
-
-                    }
-                );
-
-
-            if (!event) {
-                return;
-            }
-
-
-            const article =
-                $("<article>")
-                    .addClass(
-                        "registration-item"
+                        }
                     );
 
 
-            article.append(
-
-                $("<p>")
-                    .addClass(
-                        "eyebrow"
-                    )
-                    .text(
-                        event.category
-                    )
-
-            );
+                if (!event) {
+                    return;
+                }
 
 
-            article.append(
+                const card =
+                    $("<article>")
+                        .addClass(
+                            "registration-item"
+                        );
+
 
                 $("<h2>")
-                    .text(
-                        event.title
-                    )
+                    .text(event.title)
+                    .appendTo(card);
 
-            );
-
-
-            article.append(
 
                 $("<p>")
                     .text(
-                        event.date +
-                        " · " +
-                        event.time
+                        "Name: " +
+                        registration.name
                     )
+                    .appendTo(card);
 
-            );
-
-
-            article.append(
-
-                $("<p>")
-                    .text(
-                        "Registered as: " +
-                        registration.studentName
-                    )
-
-            );
-
-
-            article.append(
 
                 $("<p>")
                     .text(
                         "Email: " +
                         registration.email
                     )
-
-            );
-
-
-            const actions =
-                $("<div>")
-                    .addClass(
-                        "registration-actions"
-                    );
+                    .appendTo(card);
 
 
-            const editButton =
-                $("<button>")
-                    .addClass(
-                        "secondary-button"
-                    )
-                    .text(
-                        "Edit Details"
-                    );
-
-
-            const cancelButton =
-                $("<button>")
-                    .addClass(
-                        "danger-button"
-                    )
-                    .text(
-                        "Cancel"
-                    );
-
-
-            editButton.on(
-                "click",
-                function () {
-
-                    showEditForm(
-                        registration
-                    );
-
-                }
-            );
-
-
-            cancelButton.on(
-                "click",
-                function () {
-
-                    if (
-                        !confirm(
-                            "Cancel this registration?"
-                        )
-                    ) {
-                        return;
-                    }
-
-
-                    let registrations =
-                        getRegistrations();
-
-
-                    registrations =
-                        registrations.filter(
-                            function (item) {
-
-                                return !(
-                                    item.id ===
-                                    registration.id
-                                );
-
-                            }
+                const actions =
+                    $("<div>")
+                        .addClass(
+                            "registration-actions"
                         );
 
 
-                    saveRegistrations(
-                        registrations
-                    );
-
-
-                    displayRegistrations();
-
-                }
-            );
-
-
-            actions.append(
-                editButton,
-                cancelButton
-            );
-
-
-            article.append(actions);
-
-
-            container.append(article);
-
-        }
-    );
-
-}
-
-
-function showEditForm(
-    registration
-) {
-
-
-    const container =
-        $("#registrationList");
-
-
-    container.empty();
-
-
-    const form =
-        $("<form>")
-            .addClass(
-                "form-card"
-            );
-
-
-    form.append(
-
-        $("<p>")
-            .addClass(
-                "eyebrow"
-            )
-            .text(
-                "EDIT REGISTRATION"
-            )
-
-    );
-
-
-    form.append(
-
-        $("<h2>")
-            .text(
-                "Update your details"
-            )
-
-    );
-
-
-    const name =
-        $("<input>")
-            .attr({
-                type: "text",
-                id: "editName",
-                maxlength: 80,
-                required: true
-            })
-            .val(
-                registration.studentName
-            );
-
-
-    const nameGroup =
-        $("<div>")
-            .addClass(
-                "form-group"
-            );
-
-
-    nameGroup.append(
-
-        $("<label>")
-            .attr(
-                "for",
-                "editName"
-            )
-            .text(
-                "Full name"
-            )
-
-    );
-
-
-    nameGroup.append(name);
-
-
-    const email =
-        $("<input>")
-            .attr({
-                type: "email",
-                id: "editEmail",
-                maxlength: 120,
-                required: true
-            })
-            .val(
-                registration.email
-            );
-
-
-    const emailGroup =
-        $("<div>")
-            .addClass(
-                "form-group"
-            );
-
-
-    emailGroup.append(
-
-        $("<label>")
-            .attr(
-                "for",
-                "editEmail"
-            )
-            .text(
-                "Email"
-            )
-
-    );
-
-
-    emailGroup.append(email);
-
-
-    const notes =
-        $("<textarea>")
-            .attr({
-                id: "editNotes",
-                maxlength: 300
-            })
-            .val(
-                registration.notes
-            );
-
-
-    const notesGroup =
-        $("<div>")
-            .addClass(
-                "form-group"
-            );
-
-
-    notesGroup.append(
-
-        $("<label>")
-            .attr(
-                "for",
-                "editNotes"
-            )
-            .text(
-                "Notes"
-            )
-
-    );
-
-
-    notesGroup.append(notes);
-
-
-    const error =
-        $("<p>")
-            .addClass(
-                "form-error"
-            );
-
-
-    const save =
-        $("<button>")
-            .attr(
-                "type",
-                "submit"
-            )
-            .addClass(
-                "primary-button"
-            )
-            .text(
-                "Save Changes"
-            );
-
-
-    const cancel =
-        $("<button>")
-            .attr(
-                "type",
-                "button"
-            )
-            .addClass(
-                "secondary-button"
-            )
-            .text(
-                "Back"
-            );
-
-
-    cancel.on(
-        "click",
-        function () {
-
-            displayRegistrations();
-
-        }
-    );
-
-
-    const actions =
-        $("<div>")
-            .addClass(
-                "form-actions"
-            );
-
-
-    actions.append(
-        save,
-        cancel
-    );
-
-
-    form.append(
-        nameGroup,
-        emailGroup,
-        notesGroup,
-        error,
-        actions
-    );
-
-
-    form.on(
-        "submit",
-        function (event) {
-
-            event.preventDefault();
-
-
-            const newName =
-                $("#editName")
-                    .val()
-                    .trim();
-
-
-            const newEmail =
-                $("#editEmail")
-                    .val()
-                    .trim();
-
-
-            const newNotes =
-                $("#editNotes")
-                    .val()
-                    .trim();
-
-
-            if (
-                newName.length < 2
-            ) {
-
-                error.text(
-                    "Name must contain at least 2 characters."
+                const edit =
+                    $("<button>")
+                        .addClass(
+                            "secondary-button"
+                        )
+                        .text(
+                            "Edit Details"
+                        );
+
+
+                edit.on(
+                    "click",
+                    function () {
+
+                        showEditForm(
+                            registration
+                        );
+
+                    }
                 );
 
-                return;
-            }
+
+                const cancel =
+                    $("<button>")
+                        .addClass(
+                            "danger-button"
+                        )
+                        .text(
+                            "Cancel"
+                        );
 
 
-            const emailPattern =
-                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                cancel.on(
+                    "click",
+                    function () {
+
+                        if (
+                            !confirm(
+                                "Cancel this registration?"
+                            )
+                        ) {
+                            return;
+                        }
 
 
-            if (
-                !emailPattern.test(
-                    newEmail
-                )
-            ) {
-
-                error.text(
-                    "Please enter a valid email."
-                );
-
-                return;
-            }
-
-
-            let registrations =
-                getRegistrations();
-
-
-            const index =
-                registrations.findIndex(
-                    function (item) {
-
-                        return (
-                            item.id ===
+                        deleteRegistration(
                             registration.id
                         );
 
+
+                        displayRegistrations();
+
                     }
                 );
 
 
-            if (index === -1) {
-                return;
+                actions.append(
+                    edit,
+                    cancel
+                );
+
+
+                card.append(actions);
+
+                container.append(card);
+
             }
+        );
+
+    }
 
 
-            registrations[index].studentName =
-                newName;
+    function showEditForm(
+        registration
+    ) {
+
+        container.empty();
 
 
-            registrations[index].email =
-                newEmail;
+        const form =
+            $("<form>")
+                .addClass(
+                    "form-card"
+                );
 
 
-            registrations[index].notes =
-                newNotes;
+        $("<h2>")
+            .text(
+                "Edit Registration"
+            )
+            .appendTo(form);
 
 
-            saveRegistrations(
-                registrations
-            );
+        const name =
+            $("<input>")
+                .attr({
+                    type: "text",
+                    maxlength: 80
+                })
+                .val(
+                    registration.name
+                );
 
 
-            displayRegistrations();
+        const email =
+            $("<input>")
+                .attr({
+                    type: "email",
+                    maxlength: 120
+                })
+                .val(
+                    registration.email
+                );
 
-        }
-    );
+
+        const nameLabel =
+            $("<label>")
+                .text("Full Name");
 
 
-    container.append(form);
+        const emailLabel =
+            $("<label>")
+                .text("Email");
 
-}
+
+        const nameGroup =
+            $("<div>")
+                .addClass(
+                    "form-group"
+                )
+                .append(
+                    nameLabel,
+                    name
+                );
+
+
+        const emailGroup =
+            $("<div>")
+                .addClass(
+                    "form-group"
+                )
+                .append(
+                    emailLabel,
+                    email
+                );
+
+
+        const error =
+            $("<p>")
+                .addClass(
+                    "form-error"
+                );
+
+
+        const save =
+            $("<button>")
+                .attr(
+                    "type",
+                    "submit"
+                )
+                .addClass(
+                    "primary-button"
+                )
+                .text(
+                    "Save"
+                );
+
+
+        const back =
+            $("<button>")
+                .attr(
+                    "type",
+                    "button"
+                )
+                .addClass(
+                    "secondary-button"
+                )
+                .text(
+                    "Back"
+                );
+
+
+        back.on(
+            "click",
+            displayRegistrations
+        );
+
+
+        const actions =
+            $("<div>")
+                .addClass(
+                    "form-actions"
+                )
+                .append(
+                    save,
+                    back
+                );
+
+
+        form.append(
+            nameGroup,
+            emailGroup,
+            error,
+            actions
+        );
+
+
+        form.on(
+            "submit",
+            function (event) {
+
+                event.preventDefault();
+
+
+                const rawName =
+                    name.val();
+
+                const rawEmail =
+                    email.val();
+
+
+                if (
+                    !isSafeInput(rawName) ||
+                    !isSafeInput(rawEmail)
+                ) {
+
+                    error.text(
+                        "Invalid input."
+                    );
+
+                    return;
+
+                }
+
+
+                const safeName =
+                    sanitizeInput(
+                        rawName
+                    );
+
+                const safeEmail =
+                    sanitizeInput(
+                        rawEmail
+                    );
+
+
+                if (
+                    safeName.length < 2
+                ) {
+
+                    error.text(
+                        "Enter a valid name."
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    !isValidEmail(
+                        safeEmail
+                    )
+                ) {
+
+                    error.text(
+                        "Enter a valid email."
+                    );
+
+                    return;
+
+                }
+
+
+                updateRegistration(
+                    registration.id,
+                    safeName,
+                    safeEmail
+                );
+
+
+                displayRegistrations();
+
+            }
+        );
+
+
+        container.append(form);
+
+    }
+
+
+    displayRegistrations();
+
+});
 
 </script>
 
-
 </body>
-
 </html>

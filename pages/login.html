@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -16,12 +15,9 @@
         rel="stylesheet"
         href="../css/style.css"
     >
-
 </head>
 
-
 <body>
-
 
 <header class="site-header">
 
@@ -34,19 +30,10 @@
             CAMPUS<span>HUB</span>
         </a>
 
-
         <div class="nav-links">
 
             <a href="../index.html">
                 Events
-            </a>
-
-            <a href="my-registrations.html">
-                My Registrations
-            </a>
-
-            <a href="dashboard.html">
-                Dashboard
             </a>
 
         </div>
@@ -73,14 +60,11 @@
         Login
     </h1>
 
-    <p>
-        Students can log in using their CampusHub
-        username and password.
-    </p>
 
-
-    <form id="loginForm" novalidate>
-
+    <form
+        id="loginForm"
+        novalidate
+    >
 
         <div class="form-group">
 
@@ -91,7 +75,6 @@
             <input
                 type="text"
                 id="username"
-                name="username"
                 maxlength="30"
                 autocomplete="username"
                 required
@@ -114,7 +97,6 @@
             <input
                 type="password"
                 id="password"
-                name="password"
                 maxlength="72"
                 autocomplete="current-password"
                 required
@@ -134,16 +116,12 @@
         ></p>
 
 
-        <div class="form-actions">
-
-            <button
-                type="submit"
-                class="primary-button"
-            >
-                Login
-            </button>
-
-        </div>
+        <button
+            type="submit"
+            class="primary-button"
+        >
+            Login
+        </button>
 
     </form>
 
@@ -152,19 +130,14 @@
 
 
     <h2>
-        New Student?
+        Create Student Account
     </h2>
-
-    <p>
-        Create a student account below.
-    </p>
 
 
     <form
         id="registerForm"
         novalidate
     >
-
 
         <div class="form-group">
 
@@ -175,9 +148,7 @@
             <input
                 type="text"
                 id="newUsername"
-                name="newUsername"
                 maxlength="30"
-                autocomplete="username"
                 required
             >
 
@@ -198,9 +169,7 @@
             <input
                 type="password"
                 id="newPassword"
-                name="newPassword"
                 maxlength="72"
-                autocomplete="new-password"
                 required
             >
 
@@ -221,9 +190,7 @@
             <input
                 type="password"
                 id="confirmPassword"
-                name="confirmPassword"
                 maxlength="72"
-                autocomplete="new-password"
                 required
             >
 
@@ -236,24 +203,19 @@
 
 
         <p
-            id="registerSuccess"
+            id="registerMessage"
             class="form-success"
         ></p>
 
 
-        <div class="form-actions">
-
-            <button
-                type="submit"
-                class="secondary-button"
-            >
-                Create Student Account
-            </button>
-
-        </div>
+        <button
+            type="submit"
+            class="secondary-button"
+        >
+            Create Account
+        </button>
 
     </form>
-
 
 </div>
 
@@ -265,32 +227,12 @@
 </main>
 
 
-<footer class="site-footer">
-
-<div class="container">
-
-    <strong class="footer-logo">
-        CAMPUS<span>HUB</span>
-    </strong>
-
-    <p>
-        University events and workshops.
-    </p>
-
-    <p class="copyright">
-        CampusHub student project.
-    </p>
-
-</div>
-
-</footer>
-
-
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
+<script src="../js/security.js"></script>
 <script src="../js/data.js"></script>
-
 <script src="../js/storage.js"></script>
+<script src="../js/auth.js"></script>
 
 
 <script>
@@ -298,43 +240,53 @@
 $(document).ready(function () {
 
 
-    /*
-        LOGIN
-    */
-
     $("#loginForm").on(
         "submit",
         function (event) {
 
             event.preventDefault();
 
-
             $(".form-error").text("");
 
-            $("#registerSuccess").text("");
+
+            const rawUsername =
+                $("#username").val();
+
+            const password =
+                $("#password").val();
+
+
+            if (
+                !isSafeInput(rawUsername)
+            ) {
+
+                $("#usernameError").text(
+                    "Invalid username."
+                );
+
+                return;
+
+            }
 
 
             const username =
-                $("#username")
-                    .val()
-                    .trim();
-
-
-            const password =
-                $("#password")
-                    .val();
-
-
-            let valid = true;
-
-
-            if (!isValidUsername(username)) {
-
-                $("#usernameError").text(
-                    "Enter a valid username using 3-30 letters, numbers, underscores or hyphens."
+                sanitizeInput(
+                    rawUsername
                 );
 
-                valid = false;
+
+            if (
+                !isValidUsername(
+                    username
+                )
+            ) {
+
+                $("#usernameError").text(
+                    "Username must contain 3-30 letters, numbers, underscores or hyphens."
+                );
+
+                return;
+
             }
 
 
@@ -347,47 +299,25 @@ $(document).ready(function () {
                     "Please enter your password."
                 );
 
-                valid = false;
-            }
-
-
-            if (!valid) {
                 return;
+
             }
 
 
-            const users = getUsers();
-
-
-            const user = users.find(
-                function (account) {
-
-                    return (
-                        account.username === username &&
-                        account.password === password
-                    );
-
-                }
-            );
-
-
-            if (!user) {
+            if (
+                !login(
+                    username,
+                    password
+                )
+            ) {
 
                 $("#loginError").text(
                     "Invalid username or password."
                 );
 
                 return;
+
             }
-
-
-            saveCurrentUser({
-
-                username: user.username,
-
-                role: user.role
-
-            });
 
 
             window.location.href =
@@ -397,58 +327,60 @@ $(document).ready(function () {
     );
 
 
-    /*
-        STUDENT REGISTRATION
-    */
-
     $("#registerForm").on(
         "submit",
         function (event) {
 
             event.preventDefault();
 
-
             $(".form-error").text("");
 
-            $("#registerSuccess").text("");
+            $("#registerMessage").text("");
 
 
-            const username =
-                $("#newUsername")
-                    .val()
-                    .trim();
-
+            const rawUsername =
+                $("#newUsername").val();
 
             const password =
-                $("#newPassword")
-                    .val();
+                $("#newPassword").val();
+
+            const confirm =
+                $("#confirmPassword").val();
 
 
-            const confirmPassword =
-                $("#confirmPassword")
-                    .val();
-
-
-            let valid = true;
-
-
-            /*
-                Username validation
-            */
-
-            if (!isValidUsername(username)) {
+            if (
+                !isSafeInput(rawUsername)
+            ) {
 
                 $("#newUsernameError").text(
-                    "Username must be 3-30 characters and use only letters, numbers, underscores or hyphens."
+                    "Invalid username."
                 );
 
-                valid = false;
+                return;
+
             }
 
 
-            /*
-                Password validation
-            */
+            const username =
+                sanitizeInput(
+                    rawUsername
+                );
+
+
+            if (
+                !isValidUsername(
+                    username
+                )
+            ) {
+
+                $("#newUsernameError").text(
+                    "Username must contain 3-30 letters, numbers, underscores or hyphens."
+                );
+
+                return;
+
+            }
+
 
             if (
                 password.length < 8 ||
@@ -459,104 +391,56 @@ $(document).ready(function () {
                     "Password must contain 8-72 characters."
                 );
 
-                valid = false;
+                return;
+
             }
 
 
-            /*
-                Confirm password
-            */
-
             if (
-                password !== confirmPassword
+                password !== confirm
             ) {
 
                 $("#confirmPasswordError").text(
                     "Passwords do not match."
                 );
 
-                valid = false;
-            }
-
-
-            if (!valid) {
                 return;
+
             }
 
 
-            const users = getUsers();
-
-
-            const exists = users.some(
-                function (user) {
-
-                    return (
-                        user.username.toLowerCase() ===
-                        username.toLowerCase()
-                    );
-
-                }
-            );
-
-
-            if (exists) {
+            if (
+                !registerStudent(
+                    username,
+                    password
+                )
+            ) {
 
                 $("#newUsernameError").text(
-                    "That username is already taken."
+                    "Username already exists."
                 );
 
                 return;
+
             }
-
-
-            /*
-                All self-created accounts
-                are students.
-            */
-
-            users.push({
-
-                username: username,
-
-                password: password,
-
-                role: "student"
-
-            });
-
-
-            saveUsers(users);
 
 
             $("#registerForm")[0].reset();
 
 
-            $("#registerSuccess").text(
-                "Student account created. You can now log in."
-            );
+            $("#registerMessage")
+                .hide()
+                .text(
+                    "Account created. You can now log in."
+                )
+                .fadeIn(300);
 
         }
     );
-
-
-    /*
-        Username safety check
-    */
-
-    function isValidUsername(username) {
-
-        return /^[A-Za-z0-9_-]{3,30}$/.test(
-            username
-        );
-
-    }
-
 
 });
 
 </script>
 
-
 </body>
-
 </html>

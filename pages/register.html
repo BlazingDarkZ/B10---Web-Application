@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Register for Event</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+</head>
+
+<body>
+
+<header class="site-header">
+
+    <nav class="navbar">
+
+        <a
+            href="../index.html"
+            class="logo"
+        >
+            CAMPUS<span>HUB</span>
+        </a>
+
+        <div class="nav-links">
+
+            <a href="../index.html">
+                Events
+            </a>
+
+            <a href="my-registrations.html">
+                My Registrations
+            </a>
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+<main>
+
+<section class="events-section">
+
+<div class="container">
+
+<div class="form-card">
+
+    <p class="eyebrow">
+        REGISTRATION
+    </p>
+
+    <h1>
+        Register for Event
+    </h1>
+
+
+    <p
+        id="eventName"
+    ></p>
+
+
+    <form
+        id="registrationForm"
+        novalidate
+    >
+
+        <div class="form-group">
+
+            <label for="name">
+                Full Name
+            </label>
+
+            <input
+                type="text"
+                id="name"
+                maxlength="80"
+                required
+            >
+
+            <p
+                id="nameError"
+                class="form-error"
+            ></p>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="email">
+                Email
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                maxlength="120"
+                required
+            >
+
+            <p
+                id="emailError"
+                class="form-error"
+            ></p>
+
+        </div>
+
+
+        <p
+            id="formError"
+            class="form-error"
+        ></p>
+
+
+        <button
+            type="submit"
+            class="primary-button"
+        >
+            Register
+        </button>
+
+    </form>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script src="../js/security.js"></script>
+<script src="../js/data.js"></script>
+<script src="../js/storage.js"></script>
+<script src="../js/registrations.js"></script>
+
+
+<script>
+
+$(document).ready(function () {
+
+    const user =
+        getCurrentUser();
+
+
+    if (
+        user.role !== "student"
+    ) {
+
+        $("#registrationForm").hide();
+
+        $("#formError").text(
+            "Only students can register."
+        );
+
+        return;
+
+    }
+
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const eventId =
+        params.get("eventId");
+
+
+    const event =
+        getEvents().find(
+            function (item) {
+
+                return (
+                    String(item.id) ===
+                    String(eventId)
+                );
+
+            }
+        );
+
+
+    if (!event) {
+
+        $("#registrationForm").hide();
+
+        $("#formError").text(
+            "Event not found."
+        );
+
+        return;
+
+    }
+
+
+    $("#eventName").text(
+        event.title
+    );
+
+
+    $("#registrationForm").on(
+        "submit",
+        function (eventObject) {
+
+            eventObject.preventDefault();
+
+            $(".form-error").text("");
+
+
+            const rawName =
+                $("#name").val();
+
+            const rawEmail =
+                $("#email").val();
+
+
+            if (
+                !isSafeInput(rawName) ||
+                !isSafeInput(rawEmail)
+            ) {
+
+                $("#formError").text(
+                    "Invalid input."
+                );
+
+                return;
+
+            }
+
+
+            const name =
+                sanitizeInput(rawName);
+
+            const email =
+                sanitizeInput(rawEmail);
+
+
+            let valid = true;
+
+
+            if (
+                name.length < 2 ||
+                name.length > 80
+            ) {
+
+                $("#nameError").text(
+                    "Enter a valid name."
+                );
+
+                valid = false;
+
+            }
+
+
+            if (
+                !isValidEmail(email)
+            ) {
+
+                $("#emailError").text(
+                    "Enter a valid email address."
+                );
+
+                valid = false;
+
+            }
+
+
+            if (!valid) {
+                return;
+            }
+
+
+            if (
+                !createRegistration(
+                    eventId,
+                    name,
+                    email
+                )
+            ) {
+
+                $("#formError").text(
+                    "You may already be registered."
+                );
+
+                return;
+
+            }
+
+
+            window.location.href =
+                "my-registrations.html";
+
+        }
+    );
+
+});
+
+</script>
+
+</body>
+</html>
