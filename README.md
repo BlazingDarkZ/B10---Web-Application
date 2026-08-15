@@ -149,3 +149,12 @@ An organizer can:
 
 ---
 
+## 5. Security
+
+The project includes basic client-side security measures.
+
+Forms validate and limit user input before data is saved. User-generated content is displayed using safe text rendering such as jQuery `.text()` instead of `.html()` to reduce the risk of Cross-Site Scripting (XSS).
+
+The application also checks user roles and event ownership before allowing actions such as editing or deleting events.
+
+Because this is a front-end-only project, the login and security system is only a demonstration. Passwords and roles stored in localStorage are not secure enough for a real application. A real system would use server-side authentication, password hashing, server-side validation and authorization.
